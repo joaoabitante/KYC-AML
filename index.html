@@ -113,6 +113,21 @@
     ]
   }
   </script>
+  <script>
+  /* Aplica o tema ANTES de qualquer pintura: rodando só no DOMContentLoaded,
+     quem usa modo escuro via um flash branco a cada carregamento. */
+  (function () {
+    try {
+      var t = localStorage.getItem("kyc_theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  })();
+  </script>
   <style>
 /* =====================================================================
    KYC AML Lite Brasil — style.css
@@ -208,8 +223,12 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 .site-header {
   position: sticky; top: 0; z-index: 50;
   background: color-mix(in srgb, var(--surface) 86%, transparent);
-  backdrop-filter: saturate(140%) blur(10px);
   border-bottom: 1px solid var(--border);
+}
+/* blur no header fixo é o item mais caro por frame em celular fraco:
+   só é aplicado onde há folga de tela e o usuário não pediu menos movimento */
+@media (min-width: 981px) and (prefers-reduced-motion: no-preference) {
+  .site-header { backdrop-filter: saturate(140%) blur(10px); }
 }
 .header-inner { display: flex; align-items: center; gap: 22px; padding: 12px 0; }
 .brand { display: flex; align-items: center; gap: 12px; }
@@ -424,6 +443,12 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 .import-label { cursor: pointer; display: inline-flex; align-items: center; }
 .import-label:focus-within { outline: 3px solid var(--blue-500); outline-offset: 2px; }
 #importJson:focus-visible + .import-label, .sr-only:focus + .import-label { outline: 3px solid var(--blue-500); }
+/* Canvas responsivo: sem max-width, o medidor de 300px estourava telas de ~370px */
+#gaugeCanvas, #donutCanvas { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+/* Reserva de espaço do formulário injetado por JS, para não deslocar o layout */
+#riskForm { min-height: 620px; }
+@media (max-width: 720px) { #riskForm { min-height: 0; } }
+
 /* Checklist documental */
 .checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .check-card { opacity: .62; transition: opacity .2s, border-color .2s; }
@@ -706,6 +731,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
             <li>Exporte em TXT ou JSON para guardar localmente, se desejar.</li>
           </ol>
           <button id="resetSession" class="btn btn-ghost btn-sm" type="button">Zerar painel da sessão</button>
+          <span id="sessionMsg" class="toolbar-msg" role="status" aria-live="polite"></span>
         </div>
       </div>
     </section>
@@ -743,6 +769,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
           <div class="side-actions">
             <button id="genReport" class="btn btn-primary btn-block" type="button">Gerar relatório</button>
             <button id="clearForm" class="btn btn-ghost btn-block btn-sm" type="button">Limpar respostas</button>
+            <span id="matrixMsg" class="toolbar-msg" role="status" aria-live="polite"></span>
           </div>
         </aside>
       </div>
@@ -1132,6 +1159,9 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
   /* Análise anterior carregada via importação (para comparar na revisão periódica) */
   var anterior = null;
 
+  /* Assinatura da última análise registrada no painel, para não contar em dobro */
+  var ultimaRegistrada = null;
+
   /* ----------------------------------------------------------------
      2) HELPERS
   ---------------------------------------------------------------- */
@@ -1182,9 +1212,16 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
     };
   }
 
+  /* Cores do tema em cache: getComputedStyle era chamado ~8x por clique e
+     ~12x por resize, forçando recálculo de estilo à toa. */
+  var _cores = {};
   function getColor(varName) {
-    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || "#888";
+    if (_cores[varName]) return _cores[varName];
+    var v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || "#888";
+    _cores[varName] = v;
+    return v;
   }
+  function limparCacheCores() { _cores = {}; }
 
   function computeScore() {
     var score = 0;
@@ -1564,6 +1601,11 @@ recLines + "\n\n" +
 
     lastReport = {
       schema: "kyc-aml-lite/1",
+      // ISO 8601 com fuso: a data em pt-BR abaixo é para leitura humana e não é parseável
+      gerado_em_iso: new Date().toISOString(),
+      fuso_horario: (function () {
+        try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) { return ""; }
+      })(),
       revisao_de: anterior,
       cliente: cliente || null,
       analista: analista || null,
@@ -1597,7 +1639,18 @@ recLines + "\n\n" +
      6) DASHBOARD / SESSÃO
   ---------------------------------------------------------------- */
   function registerAnalysis() {
-    if (!lastReport) { buildReport(); }
+    // Sempre regenera: registrar um relatório obsoleto contaria a faixa errada
+    buildReport();
+    if (!lastReport) return;
+
+    // Impede contar duas vezes a mesma análise (duplo clique / clique repetido)
+    var assinatura = JSON.stringify(lastReport.respostas) + "|" + lastReport.faixa;
+    if (assinatura === ultimaRegistrada) {
+      flash("Esta análise já foi registrada. Mude alguma resposta para registrar outra.");
+      return;
+    }
+    ultimaRegistrada = assinatura;
+
     session.total += 1;
     if (lastReport.faixa === "low") session.low += 1;
     else if (lastReport.faixa === "med") session.med += 1;
@@ -1619,8 +1672,9 @@ recLines + "\n\n" +
 
   function resetSession() {
     session = { total: 0, low: 0, med: 0, high: 0 };
+    ultimaRegistrada = null;
     renderDashboard();
-    flash("Painel da sessão zerado.");
+    flash("Painel da sessão zerado.", "#sessionMsg");
   }
 
   /* ----------------------------------------------------------------
@@ -1654,32 +1708,58 @@ recLines + "\n\n" +
     var ta = document.createElement("textarea");
     ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
     document.body.appendChild(ta); ta.select();
-    try { document.execCommand("copy"); flash("Relatório copiado ✓"); }
-    catch (e) { flash("Não foi possível copiar."); }
+    var ok = false;
+    // execCommand devolve false quando a cópia falha: ignorar isso anunciava sucesso falso
+    try { ok = document.execCommand("copy") === true; } catch (e) { ok = false; }
     document.body.removeChild(ta);
+    flash(ok ? "Relatório copiado ✓" : "Não foi possível copiar — use “Exportar TXT”.");
   }
 
-  function flash(msg) {
-    var el = $("#toolbarMsg");
+  /* Mensagem de status; `alvo` permite avisar na seção onde a ação aconteceu,
+     em vez de escrever numa área fora da tela do usuário. */
+  function flash(msg, alvo) {
+    var el = $(alvo || "#toolbarMsg");
+    if (!el) el = $("#toolbarMsg");
+    if (!el) return;
     el.textContent = msg;
     clearTimeout(el._t);
-    el._t = setTimeout(function () { el.textContent = ""; }, 2600);
+    el._t = setTimeout(function () { el.textContent = ""; }, 4000);
   }
 
   /* ----------------------------------------------------------------
      8) GRÁFICOS EM CANVAS (vanilla, sem dependências externas)
   ---------------------------------------------------------------- */
+  /* Ajusta o canvas ao devicePixelRatio: sem isso o desenho sai borrado
+     em qualquer tela HiDPI (praticamente todo celular). Devolve as
+     dimensões em CSS pixels, para o restante do código não mudar. */
+  function prepararCanvas(cv, wCss, hCss) {
+    var dpr = window.devicePixelRatio || 1;
+    var larguraReal = cv.clientWidth || wCss;
+    var escala = Math.min(1, larguraReal / wCss);
+    var W = Math.round(wCss * escala), H = Math.round(hCss * escala);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) {
+      cv.width = Math.round(W * dpr);
+      cv.height = Math.round(H * dpr);
+    }
+    cv.style.width = W + "px";
+    cv.style.height = H + "px";
+    var ctx = cv.getContext("2d");
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(cv.width / W, cv.height / H);
+    ctx.clearRect(0, 0, W, H);
+    return { ctx: ctx, W: W, H: H, escala: escala };
+  }
+
   function drawGauge(score) {
     var cv = $("#gaugeCanvas"); if (!cv) return;
-    var ctx = cv.getContext("2d");
-    var W = cv.width, H = cv.height;
-    var cx = W / 2, cy = H - 20, R = 120;
-    ctx.clearRect(0, 0, W, H);
+    var p = prepararCanvas(cv, 300, 190);
+    var ctx = p.ctx, W = p.W, H = p.H;
+    var cx = W / 2, cy = H - 20 * p.escala, R = 120 * p.escala;
     ctx.lineCap = "round";
 
     // trilho de fundo (semicírculo)
     ctx.beginPath();
-    ctx.lineWidth = 20;
+    ctx.lineWidth = 20 * p.escala;
     ctx.strokeStyle = getColor("--surface-2");
     ctx.arc(cx, cy, R, Math.PI, 2 * Math.PI);
     ctx.stroke();
@@ -1687,14 +1767,16 @@ recLines + "\n\n" +
     // faixas coloridas
     var bands = [
       { from: 0,  to: 30,  color: getColor("--low") },
-      { from: 31, to: 60,  color: getColor("--med") },
-      { from: 61, to: MAX_SCORE, color: getColor("--high") }
+      { from: 30, to: 60,  color: getColor("--med") },
+      { from: 60, to: MAX_SCORE, color: getColor("--high") }
     ];
     bands.forEach(function (b) {
       var a0 = Math.PI + (b.from / MAX_SCORE) * Math.PI;
       var a1 = Math.PI + (Math.min(b.to, MAX_SCORE) / MAX_SCORE) * Math.PI;
-      ctx.beginPath(); ctx.lineWidth = 8; ctx.globalAlpha = .35;
-      ctx.strokeStyle = b.color; ctx.arc(cx, cy, R + 16, a0, a1); ctx.stroke();
+      ctx.beginPath(); ctx.lineWidth = 8 * p.escala; ctx.globalAlpha = .35;
+      ctx.lineCap = "butt";
+      ctx.strokeStyle = b.color; ctx.arc(cx, cy, R + 16 * p.escala, a0, a1); ctx.stroke();
+      ctx.lineCap = "round";
       ctx.globalAlpha = 1;
     });
 
@@ -1702,7 +1784,7 @@ recLines + "\n\n" +
     var frac = Math.min(1, score / MAX_SCORE);
     var c = matrizCompleta() ? avaliar().classe : classify(score);
     ctx.beginPath();
-    ctx.lineWidth = 20;
+    ctx.lineWidth = 20 * p.escala;
     ctx.strokeStyle = c.color;
     ctx.arc(cx, cy, R, Math.PI, Math.PI + frac * Math.PI);
     ctx.stroke();
@@ -1711,20 +1793,20 @@ recLines + "\n\n" +
     var ang = Math.PI + frac * Math.PI;
     ctx.beginPath();
     ctx.strokeStyle = getColor("--text");
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 3 * p.escala;
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + Math.cos(ang) * (R - 6), cy + Math.sin(ang) * (R - 6));
+    ctx.lineTo(cx + Math.cos(ang) * (R - 6 * p.escala), cy + Math.sin(ang) * (R - 6 * p.escala));
     ctx.stroke();
     ctx.beginPath();
     ctx.fillStyle = getColor("--text");
-    ctx.arc(cx, cy, 6, 0, 2 * Math.PI); ctx.fill();
+    ctx.arc(cx, cy, 6 * p.escala, 0, 2 * Math.PI); ctx.fill();
   }
 
   function drawDonut() {
     var cv = $("#donutCanvas"); if (!cv) return;
-    var ctx = cv.getContext("2d");
-    var W = cv.width, H = cv.height, cx = W / 2, cy = H / 2, R = 90, r = 56;
-    ctx.clearRect(0, 0, W, H);
+    var p = prepararCanvas(cv, 240, 240);
+    var ctx = p.ctx, W = p.W, H = p.H;
+    var cx = W / 2, cy = H / 2, R = 90 * p.escala, r = 56 * p.escala;
 
     var data = [
       { v: session.low,  color: getColor("--low") },
@@ -1774,7 +1856,7 @@ recLines + "\n\n" +
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     try { localStorage.setItem("kyc_theme", theme); } catch (e) {}
-    // Redesenhar gráficos para refletir novas cores do tema
+    limparCacheCores(); // as variáveis de cor mudaram com o tema
     updateLive();
     drawDonut();
   }
@@ -1803,9 +1885,11 @@ recLines + "\n\n" +
     $("#clearForm").addEventListener("click", function () {
       QUESTIONS.forEach(function (q) { answers[q.id] = null; });
       lastReport = null;
+      anterior = null;
       $("#reportOutput").textContent = "Preencha a matriz de risco e clique em “Gerar relatório”.";
+      $("#identCliente").value = ""; $("#identAnalista").value = "";
       refreshSegments(); updateLive();
-      flash("Respostas limpas.");
+      flash("Respostas limpas.", "#matrixMsg");
     });
 
     /* Importação de análise anterior — FileReader lê o arquivo local,
@@ -1858,7 +1942,8 @@ recLines + "\n\n" +
     $("#copyBtn").addEventListener("click", function () { buildReport(); copyReport(); });
     $("#exportTxt").addEventListener("click", function () {
       var text = buildReport();
-      download("relatorio-aml-" + fileStamp() + ".txt", text, "text/plain;charset=utf-8");
+      // BOM UTF-8: sem ele, acentos viram mojibake no Bloco de Notas e no Excel antigos
+      download("relatorio-aml-" + fileStamp() + ".txt", "﻿" + text, "text/plain;charset=utf-8");
       flash("Arquivo TXT gerado ✓");
     });
     $("#exportJson").addEventListener("click", function () {
@@ -1870,7 +1955,13 @@ recLines + "\n\n" +
     $("#resetSession").addEventListener("click", resetSession);
 
     // Redesenhar gráficos ao redimensionar (densidade de pixels estável)
-    window.addEventListener("resize", function () { drawGauge(computeScore().score); drawDonut(); });
+    // Debounce: sem isso os dois canvas eram redesenhados a cada frame de
+    // scroll no Android, onde a barra de endereço dispara resize continuamente.
+    var _rt = null;
+    window.addEventListener("resize", function () {
+      clearTimeout(_rt);
+      _rt = setTimeout(function () { drawGauge(computeScore().score); drawDonut(); }, 150);
+    });
   }
 
   function init() {

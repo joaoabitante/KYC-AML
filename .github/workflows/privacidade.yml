@@ -1,0 +1,98 @@
+name: Barreira de privacidade
+
+# O diferencial desta ferramenta é não fazer nenhuma requisição de rede em runtime
+# e não coletar dado nenhum. Isso é fácil de quebrar sem querer: basta alguém (ou
+# uma IA) adicionar um fetch, uma fonte do Google ou um script de analytics.
+# Este workflow falha o PR antes que isso chegue ao ar.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nenhuma chamada de rede em runtime
+        run: |
+          set -uo pipefail
+          falhou=0
+          # XMLHttpRequest e WebSocket entram como palavra inteira; fetch( evita casar "prefetch"
+          for padrao in 'fetch(' 'XMLHttpRequest' 'WebSocket' 'sendBeacon' 'EventSource' 'importScripts'; do
+            if grep -n -F "$padrao" index.html; then
+              echo "::error::Chamada de rede encontrada em index.html: $padrao"
+              falhou=1
+            fi
+          done
+          exit $falhou
+
+      - name: Nenhum recurso externo (CDN, fonte, imagem de terceiro)
+        run: |
+          set -uo pipefail
+          # procura src/href http(s) que não sejam do próprio domínio nem links de texto
+          if grep -n -E '(src|href)="https?://' index.html \
+             | grep -v 'kyc.contbit.tax' \
+             | grep -v -E 'rel="(noopener|noreferrer| )*[^"]*"' \
+             | grep -E '(script|link rel="stylesheet"|img)'; then
+            echo "::error::Recurso externo referenciado no HTML."
+            exit 1
+          fi
+          echo "Nenhum recurso externo carregado."
+
+      - name: Nenhum tracker ou analytics
+        run: |
+          set -uo pipefail
+          falhou=0
+          for padrao in 'googletagmanager' 'google-analytics' 'gtag(' 'hotjar' 'clarity.ms' 'facebook.net' 'plausible' 'matomo' 'segment.com' 'mixpanel'; do
+            if grep -n -i -F "$padrao" index.html; then
+              echo "::error::Tracker encontrado: $padrao"
+              falhou=1
+            fi
+          done
+          exit $falhou
+
+      - name: Nenhum dado pessoal em armazenamento persistente
+        run: |
+          set -uo pipefail
+          # Só chamadas reais (getItem/setItem/open), não menções em comentário.
+          # localStorage é permitido apenas para a preferência de tema (kyc_theme).
+          if grep -n -E '(localStorage|sessionStorage)\.(get|set|remove)Item|indexedDB\.open' index.html | grep -v 'kyc_theme'; then
+            echo "::error::Uso de armazenamento fora da preferência de tema (kyc_theme)."
+            exit 1
+          fi
+          if grep -n -i 'document.cookie' index.html; then
+            echo "::error::Uso de cookie encontrado."
+            exit 1
+          fi
+          echo "Armazenamento restrito à preferência de tema."
+
+      - name: CSP e cabeçalhos de segurança presentes
+        run: |
+          set -uo pipefail
+          for chave in "connect-src 'none'" "Strict-Transport-Security" "X-Content-Type-Options" "Referrer-Policy" "X-Frame-Options"; do
+            if ! grep -q -F "$chave" vercel.json; then
+              echo "::error::Cabeçalho ausente no vercel.json: $chave"
+              exit 1
+            fi
+          done
+          echo "Cabeçalhos de segurança no lugar."
+
+      - name: O aviso jurídico continua na página
+        run: |
+          set -uo pipefail
+          if ! grep -q 'finalidade exclusivamente educacional' index.html; then
+            echo "::error::Aviso jurídico obrigatório foi removido do index.html."
+            exit 1
+          fi
+          if ! grep -q -i 'coaf' index.html; then
+            echo "::error::Aviso sobre a comunicação ao Coaf foi removido."
+            exit 1
+          fi
+          echo "Avisos obrigatórios presentes."
