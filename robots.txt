@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kyc.contbit.tax/sitemap.xml
