@@ -330,6 +330,22 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 }
 .reg-card h3 { font-size: 1.02rem; margin-bottom: 6px; }
 .reg-card p { color: var(--text-soft); font-size: .9rem; }
+/* Estado "não respondido" e regras de sobreposição */
+.risk-badge.risk-pending { background: var(--surface-2); color: var(--text-soft); border: 1px dashed var(--border); }
+.q-item.is-pending { opacity: .96; }
+.q-item.is-pending .q-text::after { content: " • não respondida"; color: var(--text-soft); font-size: .8rem; font-weight: 500; }
+.matrix-progress { font-size: .84rem; color: var(--text-soft); margin-top: 10px; line-height: 1.45; }
+.matrix-progress.is-complete { color: var(--low); font-weight: 600; }
+.override-box { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: rgba(214, 158, 46, .10); border: 1px solid var(--med); }
+.override-box strong { display: block; font-size: .85rem; color: var(--med-ink, var(--text)); margin-bottom: 6px; }
+.override-box ul { margin: 0; padding-left: 18px; }
+.override-box li { font-size: .82rem; color: var(--text-soft); line-height: 1.5; margin-bottom: 4px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.reg-fonte { margin-top: 8px; }
+.reg-fonte a { color: var(--blue-500); font-size: .84rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
+.reg-fonte a:hover { color: var(--navy-700); }
+[data-theme="dark"] .reg-fonte a { color: var(--blue-400); }
+[data-theme="dark"] .reg-fonte a:hover { color: #8fc0f5; }
 
 .disclaimer {
   margin-top: 26px; border-left: 5px solid var(--med);
@@ -343,6 +359,8 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
 .site-footer .brand-title { color: #fff; }
 .footer-note { font-size: .82rem; color: #9fb6d4; margin-top: 4px; }
+.footer-autor { font-size: .82rem; color: #c3d6ee; margin-top: 8px; line-height: 1.5; }
+.footer-autor strong { color: #fff; }
 .footer-mini { font-size: .8rem; color: #8aa3c4; max-width: 40ch; text-align: right; }
 
 /* ===================== RESPONSIVO ===================== */
@@ -366,7 +384,6 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 .section, .hero-gauge { animation: rise .5s ease both; }
 
   </style>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
 </head>
 <body>
   <!-- ================= HEADER ================= -->
@@ -430,7 +447,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
           <span id="gaugeScore" class="gauge-score">0</span>
           <span class="gauge-max">/ 110</span>
         </div>
-        <span id="gaugeBadge" class="risk-badge risk-low">Risco Baixo</span>
+        <span id="gaugeBadge" class="risk-badge risk-pending">Aguardando respostas</span>
         <div class="progress-wrap" aria-hidden="true">
           <div id="scoreProgress" class="progress-bar" style="width:0%"></div>
         </div>
@@ -505,8 +522,11 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
             <span id="sideScore" class="side-score-value">0</span>
             <span class="side-score-max">/ 110 pontos</span>
           </div>
-          <span id="sideBadge" class="risk-badge risk-low">Risco Baixo</span>
+          <span id="sideBadge" class="risk-badge risk-pending">Aguardando respostas</span>
           <div class="progress-wrap"><div id="sideProgress" class="progress-bar" style="width:0%"></div></div>
+
+          <p id="matrixProgress" class="matrix-progress" role="status" aria-live="polite">Respondidas 0 de 9 — a classificação só é emitida com a matriz completa.</p>
+          <div id="overrideBox" class="override-box" role="note" hidden></div>
 
           <h4 class="side-sub">Faixas de classificação</h4>
           <ul class="bands">
@@ -577,45 +597,51 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
     <section id="regulatorio" class="section">
       <div class="section-head">
         <h2>Base regulatória de referência</h2>
-        <p class="section-desc">Principais normas relacionadas a PLD/FT no Brasil e referências internacionais. Lista educacional e não exaustiva.</p>
+        <p class="section-desc">Principais normas de PLD/FT no Brasil e referências internacionais, com link para a fonte oficial. Lista educacional e não exaustiva. Conferida em 24/07/2026.</p>
       </div>
 
       <div class="reg-grid">
         <div class="card reg-card">
           <span class="reg-tag">Lei</span>
           <h3>Lei nº 9.613/1998</h3>
-          <p>Lei de Lavagem de Dinheiro. Tipifica o crime e cria o COAF, estabelecendo obrigações de identificação, registro e comunicação.</p>
+          <p>Lei de Lavagem de Dinheiro. Tipifica o crime e cria o Coaf, estabelecendo os deveres de identificação de clientes, manutenção de registros e comunicação de operações. Alterada pela Lei nº 12.683/2012, que ampliou o rol de crimes antecedentes.</p>
+          <p class="reg-fonte"><a href="https://www.planalto.gov.br/ccivil_03/leis/l9613.htm" target="_blank" rel="noopener noreferrer">Texto oficial · Planalto</a></p>
         </div>
         <div class="card reg-card">
           <span class="reg-tag">Lei</span>
           <h3>Lei nº 14.478/2022</h3>
-          <p>Marco legal dos ativos virtuais. Disciplina prestadores de serviços de ativos virtuais (VASPs) e os submete a deveres de PLD/FT.</p>
+          <p>Marco legal dos ativos virtuais. Define prestadora de serviços de ativos virtuais (PSAV/VASP), inclui-a entre as pessoas obrigadas da Lei nº 9.613/1998 e cria o tipo penal de fraude com ativos virtuais.</p>
+          <p class="reg-fonte"><a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14478.htm" target="_blank" rel="noopener noreferrer">Texto oficial · Planalto</a></p>
+        </div>
+        <div class="card reg-card">
+          <span class="reg-tag">CFC</span>
+          <h3>Resolução CFC nº 1.721/2024</h3>
+          <p><strong>A norma dos profissionais e organizações contábeis.</strong> Disciplina os procedimentos de PLD/FT/FPADM do setor: exige política com <em>abordagem baseada em risco</em>, cadastro atualizado de clientes, guarda de registros por no mínimo 5 anos e comunicação ao Coaf. Em vigor desde 03/06/2024; revogou a Resolução CFC nº 1.445/2013.</p>
+          <p class="reg-fonte"><a href="https://www1.cfc.org.br/sisweb/SRE/docs/RES_1721.pdf" target="_blank" rel="noopener noreferrer">Texto oficial · CFC (PDF)</a></p>
         </div>
         <div class="card reg-card">
           <span class="reg-tag">BCB</span>
-          <h3>Resolução BCB nº 96</h3>
-          <p>Dispõe sobre política, procedimentos e controles de PLD/FT/FPADM no âmbito de instituições reguladas pelo Banco Central.</p>
+          <h3>Circular BCB nº 3.978/2020</h3>
+          <p>Norma central de PLD/FT do Banco Central: dispõe sobre a política, os procedimentos e os controles internos das instituições autorizadas a funcionar pelo BCB, incluindo avaliação interna de risco, devida diligência e diligência reforçada para pessoas expostas politicamente.</p>
+          <p class="reg-fonte"><a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Circular&amp;numero=3978" target="_blank" rel="noopener noreferrer">Texto oficial · BCB</a></p>
         </div>
         <div class="card reg-card">
           <span class="reg-tag">BCB</span>
-          <h3>Resolução BCB nº 397</h3>
-          <p>Trata de aspectos de prevenção e da abordagem baseada em risco aplicáveis às instituições autorizadas a funcionar pelo BCB.</p>
-        </div>
-        <div class="card reg-card">
-          <span class="reg-tag">BCB</span>
-          <h3>Resolução BCB nº 520</h3>
-          <p>Atualiza requisitos de PLD/FT e governança de controles, reforçando monitoramento e devida diligência baseados em risco.</p>
+          <h3>Resolução BCB nº 520/2025</h3>
+          <p>Marco regulatório das prestadoras de serviços de ativos virtuais (PSAV): disciplina a constituição e o funcionamento dessas sociedades, com supervisão proporcional ao risco. Publicada em 10/11/2025, com vigência a partir de 02/02/2026.</p>
+          <p class="reg-fonte"><a href="https://www.bcb.gov.br/estabilidadefinanceira/buscanormas" target="_blank" rel="noopener noreferrer">Consultar no buscador de normas do BCB</a></p>
         </div>
         <div class="card reg-card">
           <span class="reg-tag">Internacional</span>
           <h3>Recomendações GAFI / FATF</h3>
-          <p>As 40 Recomendações do Grupo de Ação Financeira são o padrão global de PLD/FT e consagram a abordagem baseada em risco.</p>
+          <p>As 40 Recomendações do Grupo de Ação Financeira são o padrão global de PLD/FT e consagram a abordagem baseada em risco. O GAFI mantém e atualiza periodicamente as listas de jurisdições sob monitoramento reforçado e de alto risco.</p>
+          <p class="reg-fonte"><a href="https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html" target="_blank" rel="noopener noreferrer">Jurisdições monitoradas · FATF</a></p>
         </div>
       </div>
 
       <div class="disclaimer card" role="note">
         <strong>⚠️ Aviso jurídico</strong>
-        <p>Esta ferramenta possui finalidade exclusivamente educacional e não substitui análise jurídica, regulatória, contábil ou de compliance. As referências normativas podem ser atualizadas ou revogadas — sempre consulte as fontes oficiais e profissionais habilitados.</p>
+        <p>Esta ferramenta possui finalidade exclusivamente educacional e não substitui análise jurídica, regulatória, contábil ou de compliance. <strong>Ela não gera, não substitui e não dispensa a comunicação obrigatória ao Coaf</strong>, que deve ser feita pelos canais oficiais sempre que houver operação suspeita — independentemente da faixa de risco indicada aqui. As referências normativas podem ser atualizadas ou revogadas: consulte sempre as fontes oficiais e profissionais habilitados.</p>
       </div>
     </section>
   </main>
@@ -626,6 +652,8 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
       <div>
         <span class="brand-title">KYC AML Lite Brasil</span>
         <p class="footer-note">Ferramenta educacional de código aberto · Licença MIT · Privacy by Design</p>
+        <p class="footer-autor">Autoria: <strong>João Carlos Bueno Abitante</strong> — Contador, CRC-SP 320961/O-4<br />
+          Conteúdo normativo conferido em <time datetime="2026-07-24">24 de julho de 2026</time>.</p>
       </div>
       <p class="footer-mini">Nenhum dado pessoal é coletado, transmitido ou armazenado. Processamento 100% local no navegador.</p>
     </div>
@@ -678,13 +706,34 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
   ];
 
   var MAX_SCORE = QUESTIONS.reduce(function (s, q) { return s + q.weight; }, 0); // 110
+  var VERSAO_MATRIZ = "2.0 (24/07/2026)";
 
-  /* Estado das respostas: true = "Sim", false = "Não" */
+  /* ----------------------------------------------------------------
+     1.1) REGRAS DE SOBREPOSIÇÃO (piso de classificação)
+     A soma de pesos não captura interação entre fatores nem obrigação
+     normativa. Estas regras impõem um piso à classificação final,
+     qualquer que seja o escore.
+  ---------------------------------------------------------------- */
+  var NIVEIS = { low: 0, med: 1, high: 2 };
+
+  var OVERRIDES = [
+    { piso: "med",
+      quando: function (a) { return a.pep === true; },
+      motivo: "Cliente é PEP: a diligência reforçada (EDD) e a aprovação por instância superior são exigidas por norma, qualquer que seja o escore." },
+    { piso: "high",
+      quando: function (a) { return a.pep === true && a.origin === false; },
+      motivo: "Cliente é PEP e a origem dos recursos não está comprovada." },
+    { piso: "high",
+      quando: function (a) { return a.juris === true && a.origin === false; },
+      motivo: "Operação com jurisdição de maior risco somada a origem dos recursos não comprovada." },
+    { piso: "high",
+      quando: function (a) { return a.complex === true && a.third === true; },
+      motivo: "Estrutura societária opaca combinada com uso de interpostas pessoas: dificulta identificar o beneficiário final." }
+  ];
+
+  /* Estado das respostas: true = "Sim", false = "Não", null = não respondida */
   var answers = {};
-  QUESTIONS.forEach(function (q) {
-    // estado inicial sem risco: origem comprovada (Sim), demais Não
-    answers[q.id] = q.inverted ? true : false;
-  });
+  QUESTIONS.forEach(function (q) { answers[q.id] = null; });
 
   /* Contadores da sessão (somente memória) */
   var session = { total: 0, low: 0, med: 0, high: 0 };
@@ -703,6 +752,45 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
     return            { key: "high", label: "Risco Alto",   cls: "risk-high", color: getColor("--high") };
   }
 
+  function rotulo(key) {
+    if (key === "low")  return { key: "low",  label: "Risco Baixo", cls: "risk-low",  color: getColor("--low") };
+    if (key === "med")  return { key: "med",  label: "Risco Médio", cls: "risk-med",  color: getColor("--med") };
+    return                     { key: "high", label: "Risco Alto",  cls: "risk-high", color: getColor("--high") };
+  }
+
+  /* Quantas perguntas já foram respondidas */
+  function respondidas() {
+    var n = 0;
+    QUESTIONS.forEach(function (q) { if (answers[q.id] !== null) n++; });
+    return n;
+  }
+  function matrizCompleta() { return respondidas() === QUESTIONS.length; }
+
+  /* Avaliação completa: soma + regras de sobreposição */
+  function avaliar() {
+    var r = computeScore();
+    var base = classify(r.score);
+    var nivel = base.key;
+    var motivos = [];
+
+    OVERRIDES.forEach(function (o) {
+      if (o.quando(answers)) {
+        motivos.push(o.motivo);
+        if (NIVEIS[o.piso] > NIVEIS[nivel]) nivel = o.piso;
+      }
+    });
+
+    return {
+      score: r.score,
+      factors: r.factors,
+      base: base,
+      classe: rotulo(nivel),
+      elevado: nivel !== base.key,
+      motivos: motivos,
+      completa: matrizCompleta()
+    };
+  }
+
   function getColor(varName) {
     return getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || "#888";
   }
@@ -711,6 +799,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
     var score = 0;
     var factors = [];
     QUESTIONS.forEach(function (q) {
+      if (answers[q.id] === null) return; // não respondida não pontua
       var isRisk = q.inverted ? (answers[q.id] === false) : (answers[q.id] === true);
       if (isRisk) {
         score += q.weight;
@@ -781,10 +870,12 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
       var btnYes = seg.querySelector('[data-val="yes"]');
       btnNo.className = ""; btnYes.className = "";
       if (answers[q.id] === true) { btnYes.className = "active-yes"; }
-      else { btnNo.className = "active-no"; }
+      else if (answers[q.id] === false) { btnNo.className = "active-no"; }
 
-      var isRisk = q.inverted ? (answers[q.id] === false) : (answers[q.id] === true);
+      var respondida = answers[q.id] !== null;
+      var isRisk = respondida && (q.inverted ? (answers[q.id] === false) : (answers[q.id] === true));
       item.classList.toggle("is-risk", isRisk);
+      item.classList.toggle("is-pending", !respondida);
     });
   }
 
@@ -792,26 +883,76 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
      4) ATUALIZAÇÃO EM TEMPO REAL (score, badges, barras, medidor)
   ---------------------------------------------------------------- */
   function updateLive() {
-    var r = computeScore();
-    var c = classify(r.score);
-    var pct = Math.min(100, Math.round((r.score / MAX_SCORE) * 100));
+    var a = avaliar();
+    var pct = Math.min(100, Math.round((a.score / MAX_SCORE) * 100));
 
     // Hero
-    $("#gaugeScore").textContent = r.score;
-    setBadge($("#gaugeBadge"), c);
-    setProgress($("#scoreProgress"), pct, c.color);
+    $("#gaugeScore").textContent = a.score;
+    setBadge($("#gaugeBadge"), a);
+    setProgress($("#scoreProgress"), pct, a.classe.color);
 
     // Painel lateral matriz
-    $("#sideScore").textContent = r.score;
-    setBadge($("#sideBadge"), c);
-    setProgress($("#sideProgress"), pct, c.color);
+    $("#sideScore").textContent = a.score;
+    setBadge($("#sideBadge"), a);
+    setProgress($("#sideProgress"), pct, a.classe.color);
 
-    drawGauge(r.score);
+    // Progresso de preenchimento e travas de exportação
+    var n = respondidas();
+    var prog = $("#matrixProgress");
+    if (prog) {
+      prog.textContent = a.completa
+        ? "Matriz completa: " + QUESTIONS.length + " de " + QUESTIONS.length + " respondidas."
+        : "Respondidas " + n + " de " + QUESTIONS.length + " — a classificação só é emitida com a matriz completa.";
+      prog.classList.toggle("is-complete", a.completa);
+    }
+    travarAcoes(a.completa);
+
+    // Motivos das regras de sobreposição
+    var box = $("#overrideBox");
+    if (box) {
+      if (a.completa && a.motivos.length) {
+        var itens = a.motivos.map(function (m) {
+          var li = document.createElement("li");
+          li.textContent = m;
+          return li;
+        });
+        box.innerHTML = "";
+        var titulo = document.createElement("strong");
+        titulo.textContent = a.elevado
+          ? "Classificação elevada por regra de sobreposição"
+          : "Regras de sobreposição aplicáveis";
+        box.appendChild(titulo);
+        var ul = document.createElement("ul");
+        itens.forEach(function (li) { ul.appendChild(li); });
+        box.appendChild(ul);
+        box.hidden = false;
+      } else {
+        box.hidden = true;
+        box.innerHTML = "";
+      }
+    }
+
+    drawGauge(a.score);
   }
 
-  function setBadge(el, c) {
-    el.textContent = c.label;
-    el.className = "risk-badge " + c.cls;
+  /* Impede gerar/exportar relatório com a matriz incompleta */
+  function travarAcoes(completa) {
+    ["#genReport", "#registerBtn", "#copyBtn", "#exportTxt", "#exportJson"].forEach(function (sel) {
+      var el = $(sel);
+      if (!el) return;
+      el.disabled = !completa;
+      el.title = completa ? "" : "Responda todas as perguntas da matriz para liberar esta ação.";
+    });
+  }
+
+  function setBadge(el, a) {
+    if (!a.completa) {
+      el.textContent = "Aguardando respostas";
+      el.className = "risk-badge risk-pending";
+      return;
+    }
+    el.textContent = a.classe.label + (a.elevado ? " (por regra)" : "");
+    el.className = "risk-badge " + a.classe.cls;
   }
   function setProgress(el, pct, color) {
     el.style.width = pct + "%";
@@ -822,9 +963,14 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
      5) GERAÇÃO DE RELATÓRIO
   ---------------------------------------------------------------- */
   function buildReport() {
-    var r = computeScore();
-    var c = classify(r.score);
+    var a = avaliar();
+    var r = { score: a.score, factors: a.factors };
+    var c = a.classe;
     var stamp = nowStamp();
+
+    var overrideLines = a.motivos.length
+      ? a.motivos.map(function (m, i) { return "  " + (i + 1) + ". " + m; }).join("\n")
+      : "  • Nenhuma regra de sobreposição aplicável.";
 
     var factorLines = r.factors.length
       ? r.factors.map(function (q) {
@@ -843,12 +989,18 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 "   KYC AML Lite Brasil — ferramenta educacional\n" +
 "============================================================\n\n" +
 "Data da análise..: " + stamp + "\n" +
+"Versão da matriz.: " + VERSAO_MATRIZ + "\n" +
 "Score de risco...: " + r.score + " / " + MAX_SCORE + " pontos\n" +
-"Classificação....: " + c.label.toUpperCase() + "\n\n" +
+"Classificação....: " + c.label.toUpperCase() +
+  (a.elevado ? "  (elevada de " + a.base.label.toUpperCase() + " por regra de sobreposição)" : "") + "\n\n" +
 "------------------------------------------------------------\n" +
 "FATORES DE RISCO IDENTIFICADOS\n" +
 "------------------------------------------------------------\n" +
 factorLines + "\n\n" +
+"------------------------------------------------------------\n" +
+"REGRAS DE SOBREPOSIÇÃO APLICADAS\n" +
+"------------------------------------------------------------\n" +
+overrideLines + "\n\n" +
 "------------------------------------------------------------\n" +
 "RECOMENDAÇÕES DE DILIGÊNCIA\n" +
 "------------------------------------------------------------\n" +
@@ -858,27 +1010,38 @@ recLines + "\n\n" +
 "------------------------------------------------------------\n" +
 "  0 – 30  : Risco baixo\n" +
 "  31 – 60 : Risco médio\n" +
-"  61 +    : Risco alto\n\n" +
+"  61 +    : Risco alto\n" +
+"  As regras de sobreposição podem elevar a classificação acima\n" +
+"  da faixa indicada pelo escore.\n\n" +
 "------------------------------------------------------------\n" +
 "AVISO JURÍDICO\n" +
 "------------------------------------------------------------\n" +
-"Esta ferramenta possui finalidade exclusivamente educacional e\n" +
-"não substitui análise jurídica, regulatória, contábil ou de\n" +
-"compliance. Nenhum dado pessoal foi coletado ou armazenado.\n" +
+"Documento gerado automaticamente por ferramenta educacional.\n" +
+"NÃO é parecer, laudo ou relatório de compliance, e não substitui\n" +
+"análise jurídica, regulatória ou contábil por profissional\n" +
+"habilitado. NÃO gera nem substitui a comunicação obrigatória ao\n" +
+"Coaf, que deve ser feita pelos canais oficiais sempre que houver\n" +
+"operação suspeita, independentemente da faixa acima.\n" +
+"Nenhum dado pessoal foi coletado ou armazenado.\n" +
 "============================================================\n";
 
     lastReport = {
       gerado_em: stamp,
+      versao_matriz: VERSAO_MATRIZ,
       score: r.score,
       score_maximo: MAX_SCORE,
       classificacao: c.label,
       faixa: c.key,
+      classificacao_por_escore: a.base.label,
+      elevada_por_regra: a.elevado,
+      regras_de_sobreposicao: a.motivos,
       fatores_de_risco: r.factors.map(function (q) {
         return { id: q.id, fator: q.text, peso: q.weight, resposta_de_risco: q.inverted ? "NÃO" : "SIM" };
       }),
       recomendacoes: r.factors.length ? r.factors.map(function (q) { return q.rec; })
                                       : ["Diligência simplificada compatível com baixo risco."],
-      aviso: "Ferramenta educacional. Não substitui análise jurídica, regulatória, contábil ou de compliance.",
+      aviso: "Documento gerado automaticamente por ferramenta educacional. Não é parecer nem laudo e não substitui análise jurídica, regulatória, contábil ou de compliance.",
+      aviso_coaf: "Não gera nem substitui a comunicação obrigatória ao Coaf, que independe da faixa de risco indicada.",
       privacidade: "Nenhum dado pessoal coletado ou armazenado. Processamento 100% local."
     };
 
@@ -991,9 +1154,9 @@ recLines + "\n\n" +
       ctx.globalAlpha = 1;
     });
 
-    // arco do score atual
+    // arco do score atual — usa a classificação final (com sobreposição)
     var frac = Math.min(1, score / MAX_SCORE);
-    var c = classify(score);
+    var c = matrizCompleta() ? avaliar().classe : classify(score);
     ctx.beginPath();
     ctx.lineWidth = 20;
     ctx.strokeStyle = c.color;
@@ -1094,7 +1257,9 @@ recLines + "\n\n" +
       document.getElementById("relatorio").scrollIntoView({ behavior: "smooth" });
     });
     $("#clearForm").addEventListener("click", function () {
-      QUESTIONS.forEach(function (q) { answers[q.id] = q.inverted ? true : false; });
+      QUESTIONS.forEach(function (q) { answers[q.id] = null; });
+      lastReport = null;
+      $("#reportOutput").textContent = "Preencha a matriz de risco e clique em “Gerar relatório”.";
       refreshSegments(); updateLive();
       flash("Respostas limpas.");
     });
