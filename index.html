@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Ferramenta educacional gratuita de análise preliminar de risco AML/KYC. Privacy by Design, 100% no navegador, sem backend." />
+  <meta name="description" content="Avalie o risco PLD/FT de um cliente em 9 fatores ponderados e gere um relatório com recomendações de diligência. Grátis, sem cadastro e sem enviar dado nenhum: roda inteiro no seu navegador." />
   <meta name="author" content="João Carlos Bueno Abitante" />
   <meta name="referrer" content="no-referrer" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#07223f" />
-  <title>KYC AML Lite Brasil — Análise Preliminar de Risco</title>
+  <title>Matriz de Risco PLD/FT — análise KYC gratuita e sem cadastro</title>
   <link rel="canonical" href="https://kyc.contbit.tax/" />
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -20,15 +20,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="KYC AML Lite Brasil" />
   <meta property="og:locale" content="pt_BR" />
-  <meta property="og:title" content="KYC AML Lite Brasil — Análise Preliminar de Risco" />
-  <meta property="og:description" content="Análise preliminar de risco AML/KYC: educacional, gratuita e 100% no navegador — nenhum dado sai do seu computador." />
+  <meta property="og:title" content="Matriz de Risco PLD/FT — análise KYC gratuita e sem cadastro" />
+  <meta property="og:description" content="Avalie o risco PLD/FT de um cliente em 9 fatores e gere um relatório de diligência. Grátis, sem cadastro e sem enviar dado nenhum." />
   <meta property="og:url" content="https://kyc.contbit.tax/" />
   <meta property="og:image" content="https://kyc.contbit.tax/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="KYC AML Lite Brasil — Análise Preliminar de Risco" />
-  <meta name="twitter:description" content="Análise preliminar de risco AML/KYC: educacional, gratuita e 100% no navegador." />
+  <meta name="twitter:title" content="Matriz de Risco PLD/FT — análise KYC gratuita e sem cadastro" />
+  <meta name="twitter:description" content="Avalie o risco PLD/FT de um cliente em 9 fatores. Grátis, sem cadastro, roda inteiro no seu navegador." />
   <meta name="twitter:image" content="https://kyc.contbit.tax/og.png" />
 
   <script type="application/ld+json">
@@ -420,6 +420,38 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 .override-box ul { margin: 0; padding-left: 18px; }
 .override-box li { font-size: .82rem; color: var(--text-soft); line-height: 1.5; margin-bottom: 4px; }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
+.revisao-box { margin-top: 12px; padding: 9px 11px; border-radius: 8px; background: rgba(27,111,208,.09); border: 1px solid var(--blue-500); font-size: .8rem; color: var(--text-soft); line-height: 1.5; }
+.import-label { cursor: pointer; display: inline-flex; align-items: center; }
+.import-label:focus-within { outline: 3px solid var(--blue-500); outline-offset: 2px; }
+#importJson:focus-visible + .import-label, .sr-only:focus + .import-label { outline: 3px solid var(--blue-500); }
+/* Checklist documental */
+.checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.check-card { opacity: .62; transition: opacity .2s, border-color .2s; }
+.check-card.is-aplicavel { opacity: 1; border-color: var(--blue-500); box-shadow: var(--shadow-sm); }
+.check-card h3 { font-size: 1rem; margin-bottom: 4px; }
+.check-tag { display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-mute); margin-bottom: 10px; }
+.check-card.is-aplicavel .check-tag { color: var(--blue-500); }
+.check-card ul { margin: 0; padding-left: 18px; }
+.check-card li { font-size: .86rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 6px; }
+.checklist-nota { font-size: .8rem; color: var(--text-soft); margin-top: 16px; }
+@media (max-width: 720px) { .checklist-grid { grid-template-columns: 1fr; } }
+
+/* Painel do GAFI dentro da matriz */
+.gafi-panel { margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); }
+.gafi-panel summary { cursor: pointer; padding: 8px 12px; font-size: .82rem; font-weight: 700; color: var(--blue-500); list-style: none; }
+.gafi-panel summary::-webkit-details-marker { display: none; }
+.gafi-panel summary::before { content: "🌐 "; }
+.gafi-panel[open] summary { border-bottom: 1px solid var(--border); }
+.gafi-grupo { padding: 10px 12px 4px; }
+.gafi-grupo strong { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+.gafi-grupo strong.gafi-alto { color: var(--high-ink); }
+.gafi-grupo strong.gafi-cinza { color: var(--med-ink); }
+.gafi-desc { font-size: .78rem; color: var(--text-soft); margin: 3px 0 6px; line-height: 1.5; }
+.gafi-grupo ul { display: flex; flex-wrap: wrap; gap: 4px 6px; margin: 0; padding: 0; list-style: none; }
+.gafi-grupo li { font-size: .78rem; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; color: var(--text); }
+.gafi-rodape { font-size: .74rem; color: var(--text-soft); padding: 8px 12px 0; margin: 0; line-height: 1.5; }
+.gafi-link { display: inline-block; margin: 6px 12px 12px; font-size: .78rem; font-weight: 700; color: var(--blue-500); }
+
 /* FAQ */
 .faq-list { display: flex; flex-direction: column; gap: 12px; }
 .faq-item { padding: 0; }
@@ -578,6 +610,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
         <a href="#relatorio">Relatório</a>
         <a href="#educacao">Educação</a>
         <a href="#regulatorio">Base Legal</a>
+        <a href="#checklist">Checklist</a>
         <a href="#faq">Dúvidas</a>
       </nav>
 
@@ -697,6 +730,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
           <div class="progress-wrap"><div id="sideProgress" class="progress-bar" style="width:0%"></div></div>
 
           <p id="matrixProgress" class="matrix-progress" role="status" aria-live="polite">Respondidas 0 de 9 — a classificação só é emitida com a matriz completa.</p>
+          <p id="revisaoBox" class="revisao-box" role="note" hidden></p>
           <div id="overrideBox" class="override-box" role="note" hidden></div>
 
           <h4 class="side-sub">Faixas de classificação</h4>
@@ -746,6 +780,8 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
           <button id="copyBtn" class="btn btn-ghost btn-sm" type="button">Copiar relatório</button>
           <button id="exportTxt" class="btn btn-ghost btn-sm" type="button">Exportar TXT</button>
           <button id="exportJson" class="btn btn-ghost btn-sm" type="button">Exportar JSON</button>
+          <label for="importJson" class="btn btn-ghost btn-sm import-label">Importar análise (JSON)</label>
+          <input id="importJson" type="file" accept="application/json,.json" class="sr-only" />
           <span id="toolbarMsg" class="toolbar-msg" role="status" aria-live="polite"></span>
         </div>
         <pre id="reportOutput" class="report-output">Preencha a matriz de risco e clique em “Gerar relatório”.</pre>
@@ -835,6 +871,16 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
       </div>
     </section>
 
+    <!-- ================= CHECKLIST ================= -->
+    <section id="checklist" class="section">
+      <div class="section-head">
+        <h2>Checklist de cadastro e diligência</h2>
+        <p class="section-desc">Documentos e providências por perfil de cliente. A Resolução CFC nº 1.721/2024 exige cadastro atualizado com identificação, enquadramento PEP e guarda dos registros por no mínimo cinco anos — este checklist organiza o que pedir. Os blocos aplicáveis à sua análise aparecem destacados depois que você preenche a matriz.</p>
+      </div>
+      <div id="checklistGrid" class="checklist-grid"></div>
+      <p class="checklist-nota">Lista de apoio, não exaustiva: o rol de documentos depende do porte, do produto e da política da sua organização.</p>
+    </section>
+
     <!-- ================= FAQ ================= -->
     <section id="faq" class="section">
       <div class="section-head">
@@ -892,6 +938,27 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
     </div>
   </footer>
 
+  <!-- Listas do GAFI/FATF embarcadas no build.
+       NÃO editar à mão fora dos marcadores: o workflow .github/workflows/gafi.yml
+       abre issue a cada plenária lembrando de conferir contra a fonte oficial.
+       Nenhuma requisição de rede acontece no navegador — o dado já vem na página. -->
+  <!-- GAFI:START -->
+  <script type="application/json" id="gafi-data">
+  {
+    "plenaria": "19 de junho de 2026",
+    "verificado_em": "2026-07-24",
+    "fonte": "https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html",
+    "call_for_action": ["Coreia do Norte", "Irã", "Mianmar"],
+    "increased_monitoring": [
+      "Angola", "Bolívia", "Bósnia e Herzegovina", "Bulgária", "Camarões",
+      "Costa do Marfim", "Haiti", "Iêmen", "Iraque", "Kuwait", "Laos", "Líbano",
+      "Mônaco", "Nepal", "Papua-Nova Guiné", "Quênia", "República Democrática do Congo",
+      "Síria", "Sudão do Sul", "Venezuela", "Vietnã", "Ilhas Virgens Britânicas"
+    ]
+  }
+  </script>
+  <!-- GAFI:END -->
+
   <script>
 /* =====================================================================
    KYC AML Lite Brasil — script.js
@@ -942,6 +1009,94 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
   var VERSAO_MATRIZ = "2.0 (24/07/2026)";
 
   /* ----------------------------------------------------------------
+     1.2) CHECKLIST DOCUMENTAL POR PERFIL
+     `quando` = null → sempre aplicável; função → destaca conforme a matriz
+  ---------------------------------------------------------------- */
+  var CHECKLIST = [
+    {
+      id: "pf", titulo: "Pessoa física", quando: null,
+      itens: [
+        "Documento de identidade com órgão expedidor e data de emissão",
+        "CPF e conferência da situação cadastral na Receita Federal",
+        "Comprovante de endereço recente",
+        "Declaração de profissão, atividade e renda",
+        "Declaração de enquadramento como PEP, abrangendo familiares, representantes e relacionamento próximo",
+        "Informação sobre a origem dos recursos movimentados"
+      ]
+    },
+    {
+      id: "pj", titulo: "Pessoa jurídica", quando: null,
+      itens: [
+        "Contrato ou estatuto social consolidado e última alteração",
+        "Cartão CNPJ e conferência da situação cadastral",
+        "Ata de eleição dos administradores em exercício",
+        "Quadro societário destrinchado até o beneficiário final — pessoa natural",
+        "Procurações e poderes de representação vigentes",
+        "Demonstrações contábeis ou faturamento declarado do último exercício",
+        "Comprovante de endereço da sede e da operação, se diferentes"
+      ]
+    },
+    {
+      id: "pep", titulo: "Cliente PEP", quando: function (a) { return a.pep === true; },
+      itens: [
+        "Tudo o que se aplica à pessoa física, com atualização em prazo mais curto",
+        "Aprovação formal da relação por instância superior, registrada por escrito",
+        "Levantamento da origem do patrimônio, além da origem dos recursos da operação",
+        "Identificação de familiares, representantes e pessoas de relacionamento próximo",
+        "Monitoramento reforçado e contínuo, com registro das revisões feitas"
+      ]
+    },
+    {
+      id: "vasp", titulo: "Ativos virtuais / PSAV", quando: function (a) { return a.va === true; },
+      itens: [
+        "Verificação de que a prestadora está autorizada ou em processo de autorização no BCB (Resolução BCB nº 520/2025, vigência 02/02/2026)",
+        "Política de PLD/FT do prestador de serviços de ativos virtuais",
+        "Rastreamento da origem e do destino dos ativos, com endereços e transações relevantes",
+        "Justificativa econômica da operação com ativos virtuais",
+        "Atenção à Lei nº 14.478/2022, que inclui as PSAV entre as pessoas obrigadas"
+      ]
+    },
+    {
+      id: "juris", titulo: "Jurisdição de maior risco", quando: function (a) { return a.juris === true; },
+      itens: [
+        "Registro de qual jurisdição está envolvida e em que lista do GAFI ela se enquadra",
+        "Data da plenária do GAFI usada como referência na análise",
+        "Justificativa econômica da relação com aquela jurisdição",
+        "Diligência reforçada e, para jurisdições sob chamado para ação, avaliação de contramedidas",
+        "Monitoramento com periodicidade menor que a padrão"
+      ]
+    },
+    {
+      id: "origem", titulo: "Origem dos recursos não comprovada", quando: function (a) { return a.origin === false; },
+      itens: [
+        "Documentação comprobatória da origem: contratos, notas, extratos, declaração de imposto de renda",
+        "Compatibilidade entre a movimentação e a capacidade financeira declarada",
+        "Decisão formal sobre prosseguir, condicionar ou encerrar a relação, com fundamento registrado",
+        "Reavaliação da necessidade de comunicação ao Coaf"
+      ]
+    },
+    {
+      id: "beneficiario", titulo: "Beneficiário final e interpostas pessoas",
+      quando: function (a) { return a.complex === true || a.third === true; },
+      itens: [
+        "Cadeia societária mapeada camada a camada até a pessoa natural que controla ou se beneficia",
+        "Identificação de offshores, trusts e veículos societários intermediários",
+        "Relação documentada entre o cliente e os terceiros que atuam na operação",
+        "Justificativa para a estrutura adotada",
+        "Atenção a indícios de uso de interpostas pessoas"
+      ]
+    }
+  ];
+
+  /* Listas do GAFI embarcadas na própria página (sem requisição de rede) */
+  var GAFI = (function () {
+    try {
+      var el = document.getElementById("gafi-data");
+      return el ? JSON.parse(el.textContent) : null;
+    } catch (e) { return null; }
+  })();
+
+  /* ----------------------------------------------------------------
      1.1) REGRAS DE SOBREPOSIÇÃO (piso de classificação)
      A soma de pesos não captura interação entre fatores nem obrigação
      normativa. Estas regras impõem um piso à classificação final,
@@ -973,6 +1128,9 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 
   /* Último relatório gerado */
   var lastReport = null;
+
+  /* Análise anterior carregada via importação (para comparar na revisão periódica) */
+  var anterior = null;
 
   /* ----------------------------------------------------------------
      2) HELPERS
@@ -1086,9 +1244,102 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 
       item.appendChild(main);
       item.appendChild(seg);
+
+      // Na pergunta de jurisdição, entrega a lista do GAFI ali mesmo
+      if (q.id === "juris" && GAFI) { main.appendChild(painelGafi()); }
+
       form.appendChild(item);
     });
     refreshSegments();
+  }
+
+  /* Checklist documental — montado com textContent, destacado pela matriz */
+  function renderChecklist() {
+    var grid = document.getElementById("checklistGrid");
+    if (!grid) return;
+    grid.textContent = "";
+    CHECKLIST.forEach(function (bloco) {
+      var aplica = bloco.quando ? bloco.quando(answers) : true;
+      var card = document.createElement("div");
+      card.className = "card check-card" + (aplica ? " is-aplicavel" : "");
+      card.dataset.id = bloco.id;
+
+      var h = document.createElement("h3");
+      h.textContent = bloco.titulo;
+      card.appendChild(h);
+
+      var tag = document.createElement("span");
+      tag.className = "check-tag";
+      tag.textContent = bloco.quando
+        ? (aplica ? "aplicável a esta análise" : "conforme o caso")
+        : "sempre aplicável";
+      card.appendChild(tag);
+
+      var ul = document.createElement("ul");
+      bloco.itens.forEach(function (t) {
+        var li = document.createElement("li");
+        li.textContent = t;
+        ul.appendChild(li);
+      });
+      card.appendChild(ul);
+      grid.appendChild(card);
+    });
+  }
+
+  /* Lista do GAFI renderizada com textContent (nunca innerHTML) */
+  function painelGafi() {
+    var det = document.createElement("details");
+    det.className = "gafi-panel";
+
+    var sum = document.createElement("summary");
+    sum.textContent = "Ver as jurisdições listadas pelo GAFI (" +
+      (GAFI.call_for_action.length + GAFI.increased_monitoring.length) + ")";
+    det.appendChild(sum);
+
+    function grupo(titulo, descricao, lista, cls) {
+      var wrap = document.createElement("div");
+      wrap.className = "gafi-grupo";
+      var h = document.createElement("strong");
+      h.className = cls;
+      h.textContent = titulo + " (" + lista.length + ")";
+      var d = document.createElement("p");
+      d.className = "gafi-desc";
+      d.textContent = descricao;
+      var ul = document.createElement("ul");
+      lista.forEach(function (pais) {
+        var li = document.createElement("li");
+        li.textContent = pais;
+        ul.appendChild(li);
+      });
+      wrap.appendChild(h); wrap.appendChild(d); wrap.appendChild(ul);
+      return wrap;
+    }
+
+    det.appendChild(grupo(
+      "Alto risco — chamado para ação",
+      "Deficiências estratégicas graves. A norma pede contramedidas e diligência reforçada.",
+      GAFI.call_for_action, "gafi-alto"));
+    det.appendChild(grupo(
+      "Sob monitoramento reforçado (lista cinza)",
+      "Jurisdições com plano de ação em andamento junto ao GAFI. Exigem atenção adicional.",
+      GAFI.increased_monitoring, "gafi-cinza"));
+
+    var rodape = document.createElement("p");
+    rodape.className = "gafi-rodape";
+    rodape.textContent = "Plenária de " + GAFI.plenaria + " · conferido em " +
+      GAFI.verificado_em.split("-").reverse().join("/") +
+      ". As listas mudam três vezes ao ano — confirme na fonte oficial do GAFI antes de decidir.";
+    det.appendChild(rodape);
+
+    var link = document.createElement("a");
+    link.href = GAFI.fonte;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.className = "gafi-link";
+    link.textContent = "Fonte oficial · FATF/GAFI";
+    det.appendChild(link);
+
+    return det;
   }
 
   function setAnswer(id, value) {
@@ -1158,6 +1409,24 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
     }
     travarAcoes(a.completa);
 
+    // Comparação com a análise importada (revisão periódica)
+    var rev = $("#revisaoBox");
+    if (rev) {
+      if (anterior && a.completa) {
+        var delta = anterior.score === null ? null : a.score - anterior.score;
+        var frase = "Revisão da análise de " + anterior.data + ". ";
+        if (delta === null) { frase += "Escore anterior não registrado no arquivo."; }
+        else if (delta > 0)  { frase += "O risco subiu " + delta + " ponto" + (delta > 1 ? "s" : "") + ": de " + anterior.score + " (" + anterior.classificacao + ") para " + a.score + " (" + a.classe.label + ")."; }
+        else if (delta < 0)  { frase += "O risco caiu " + Math.abs(delta) + " ponto" + (delta < -1 ? "s" : "") + ": de " + anterior.score + " (" + anterior.classificacao + ") para " + a.score + " (" + a.classe.label + ")."; }
+        else                 { frase += "O escore permanece em " + a.score + " (" + a.classe.label + ")."; }
+        rev.textContent = frase;
+        rev.hidden = false;
+      } else {
+        rev.hidden = true;
+        rev.textContent = "";
+      }
+    }
+
     // Motivos das regras de sobreposição
     var box = $("#overrideBox");
     if (box) {
@@ -1183,6 +1452,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
       }
     }
 
+    renderChecklist();
     drawGauge(a.score);
   }
 
@@ -1250,8 +1520,13 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 "============================================================\n\n" +
 (cliente  ? "Cliente..........: " + cliente + "\n" : "") +
 (analista ? "Analista.........: " + analista + "\n" : "") +
+(anterior ? "Revisão de.......: análise de " + anterior.data +
+            (anterior.score !== null ? " (score " + anterior.score + ", " + anterior.classificacao + ")" : "") + "\n" : "") +
 "Data da análise..: " + stamp + "\n" +
 "Versão da matriz.: " + VERSAO_MATRIZ + "\n" +
+((answers.juris === true && GAFI)
+  ? "Listas do GAFI...: plenária de " + GAFI.plenaria + " (conferidas em " +
+    GAFI.verificado_em.split("-").reverse().join("/") + ")\n" : "") +
 "Score de risco...: " + r.score + " / " + MAX_SCORE + " pontos\n" +
 "Classificação....: " + c.label.toUpperCase() +
   (a.elevado ? "  (elevada de " + a.base.label.toUpperCase() + " por regra de sobreposição)" : "") + "\n\n" +
@@ -1288,10 +1563,15 @@ recLines + "\n\n" +
 "============================================================\n";
 
     lastReport = {
+      schema: "kyc-aml-lite/1",
+      revisao_de: anterior,
       cliente: cliente || null,
       analista: analista || null,
       gerado_em: stamp,
       versao_matriz: VERSAO_MATRIZ,
+      respostas: (function () { var o = {}; QUESTIONS.forEach(function (q) { o[q.id] = answers[q.id]; }); return o; })(),
+      listas_gafi: (answers.juris === true && GAFI)
+        ? { plenaria: GAFI.plenaria, verificado_em: GAFI.verificado_em } : null,
       score: r.score,
       score_maximo: MAX_SCORE,
       classificacao: c.label,
@@ -1526,6 +1806,48 @@ recLines + "\n\n" +
       $("#reportOutput").textContent = "Preencha a matriz de risco e clique em “Gerar relatório”.";
       refreshSegments(); updateLive();
       flash("Respostas limpas.");
+    });
+
+    /* Importação de análise anterior — FileReader lê o arquivo local,
+       sem nenhuma requisição de rede (compatível com connect-src 'none'). */
+    $("#importJson").addEventListener("change", function (ev) {
+      var f = ev.target.files && ev.target.files[0];
+      if (!f) return;
+      if (f.size > 200000) { flash("Arquivo grande demais para ser um relatório desta ferramenta."); ev.target.value = ""; return; }
+      var fr = new FileReader();
+      fr.onerror = function () { flash("Não foi possível ler o arquivo."); ev.target.value = ""; };
+      fr.onload = function () {
+        var d;
+        try { d = JSON.parse(String(fr.result)); }
+        catch (e) { flash("Arquivo inválido: não é um JSON legível."); ev.target.value = ""; return; }
+
+        if (!d || d.schema !== "kyc-aml-lite/1" || !d.respostas) {
+          flash("Este JSON não foi gerado por esta ferramenta (versão 2.0 ou mais recente).");
+          ev.target.value = ""; return;
+        }
+
+        var lidas = 0;
+        QUESTIONS.forEach(function (q) {
+          var v = d.respostas[q.id];
+          if (v === true || v === false) { answers[q.id] = v; lidas++; }
+          else { answers[q.id] = null; }
+        });
+
+        anterior = {
+          data: typeof d.gerado_em === "string" ? d.gerado_em.slice(0, 40) : "",
+          score: typeof d.score === "number" ? d.score : null,
+          classificacao: typeof d.classificacao === "string" ? d.classificacao.slice(0, 40) : "",
+          versao: typeof d.versao_matriz === "string" ? d.versao_matriz.slice(0, 40) : ""
+        };
+        if (typeof d.cliente === "string") { $("#identCliente").value = d.cliente.slice(0, 80); }
+        if (typeof d.analista === "string") { $("#identAnalista").value = d.analista.slice(0, 80); }
+
+        refreshSegments(); updateLive();
+        flash("Análise de " + (anterior.data || "data desconhecida") + " carregada (" + lidas + " respostas). O arquivo foi lido no seu navegador.");
+        document.getElementById("matriz").scrollIntoView({ behavior: "smooth" });
+        ev.target.value = "";
+      };
+      fr.readAsText(f);
     });
 
     $("#registerBtn").addEventListener("click", registerAnalysis);

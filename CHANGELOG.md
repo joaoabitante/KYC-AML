@@ -4,6 +4,35 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Histórico anterior a este arquivo: ver commits do repositório e o README.
 
+## [2.2.0] - 2026-07-24
+### Adicionado
+- **Listas do GAFI embarcadas na página.** A matriz perguntava "opera com jurisdição de
+  maior risco / país monitorado pelo GAFI?" e mandava o usuário sair do app para
+  descobrir a resposta. Agora a pergunta traz as 25 jurisdições — 3 sob chamado para
+  ação (Coreia do Norte, Irã, Mianmar) e 22 sob monitoramento reforçado — conforme a
+  plenária de 19/06/2026, com a data de conferência à vista e link para a fonte oficial.
+  O dado vem embarcado no HTML: **nenhuma requisição de rede no navegador**, `connect-src
+  'none'` intacto. Quando a jurisdição é marcada, o relatório registra qual plenária foi
+  usada como referência.
+- **Workflow `.github/workflows/gafi.yml`**: roda após cada plenária (março, julho e
+  novembro) e abre issue lembrando de conferir a lista contra a fonte oficial. Não
+  atualiza sozinho de propósito — lista regulatória não entra no ar sem revisão humana.
+- **Importar análise anterior (JSON)**, fechando o ciclo da revisão periódica exigida
+  pela abordagem baseada em risco. O export passou a incluir as respostas cruas e um
+  schema versionado (`kyc-aml-lite/1`); a importação usa `FileReader`, que lê o arquivo
+  local sem nenhuma requisição de rede. Ao importar, o app mostra a variação: "o risco
+  subiu 15 pontos: de 47 (Risco Médio) para 62 (Risco Alto)". Arquivo de outra origem
+  ou corrompido é recusado com mensagem clara.
+- **Checklist de cadastro e diligência** com 7 blocos (pessoa física, pessoa jurídica,
+  PEP, ativos virtuais/PSAV, jurisdição de maior risco, origem não comprovada,
+  beneficiário final e interpostas pessoas). Os blocos aplicáveis ao caso são destacados
+  automaticamente conforme as respostas da matriz.
+
+### Alterado
+- Título e descrição reposicionados para o termo que o público realmente busca:
+  "Matriz de Risco PLD/FT — análise KYC gratuita e sem cadastro". A descrição troca
+  jargão ("Privacy by Design", "sem backend") pelo benefício concreto.
+
 ## [2.1.0] - 2026-07-24
 ### Corrigido
 - **Contraste abaixo de AA em todos os rótulos de risco**, inclusive no aviso jurídico

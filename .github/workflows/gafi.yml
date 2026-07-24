@@ -1,0 +1,71 @@
+name: Conferir listas do GAFI
+
+# O GAFI/FATF publica as listas de jurisdições três vezes ao ano (plenárias de
+# fevereiro, junho e outubro). Este workflow NÃO atualiza o site sozinho: ele
+# abre uma issue lembrando de conferir a lista embarcada no index.html contra a
+# fonte oficial. Lista regulatória não entra no ar sem revisão humana — foi
+# exatamente esse tipo de erro que a auditoria de 24/07/2026 encontrou.
+
+on:
+  schedule:
+    # Dia 5 de março, julho e novembro (após cada plenária)
+    - cron: "0 12 5 3,7,11 *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  lembrete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ler a data da última conferência
+        id: dados
+        run: |
+          set -euo pipefail
+          VERIFICADO=$(grep -o '"verificado_em": *"[0-9-]*"' index.html | head -1 | grep -o '[0-9-]\{10\}')
+          PLENARIA=$(grep -o '"plenaria": *"[^"]*"' index.html | head -1 | sed 's/.*: *"//; s/"$//')
+          echo "verificado=$VERIFICADO" >> "$GITHUB_OUTPUT"
+          echo "plenaria=$PLENARIA"     >> "$GITHUB_OUTPUT"
+          echo "Lista embarcada: plenária de $PLENARIA, conferida em $VERIFICADO"
+
+      - name: Abrir issue de conferência
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const verificado = "${{ steps.dados.outputs.verificado }}";
+            const plenaria   = "${{ steps.dados.outputs.plenaria }}";
+            const titulo = `Conferir listas do GAFI (embarcadas: plenária de ${plenaria})`;
+
+            const abertas = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: "open", labels: "gafi"
+            });
+            if (abertas.data.some(i => i.title === titulo)) {
+              core.info("Já existe issue aberta para esta plenária.");
+              return;
+            }
+
+            const corpo = [
+              "O GAFI realiza plenárias em fevereiro, junho e outubro e republica as listas de jurisdições.",
+              "",
+              `A lista embarcada em \`index.html\` é da **plenária de ${plenaria}**, conferida em **${verificado}**.`,
+              "",
+              "## O que fazer",
+              "",
+              "1. Abrir a fonte oficial: https://www.fatf-gafi.org/en/countries/black-and-grey-lists.html",
+              "2. Comparar com o bloco entre os marcadores `<!-- GAFI:START -->` e `<!-- GAFI:END -->` no `index.html`.",
+              "3. Se houver mudança, atualizar `call_for_action`, `increased_monitoring`, `plenaria` e `verificado_em`.",
+              "4. Conferir em uma segunda fonte independente antes de publicar — é dado regulatório.",
+              "5. Registrar a mudança no `CHANGELOG.md`.",
+              "",
+              "Se nada mudou, basta atualizar `verificado_em` para a data de hoje e fechar esta issue."
+            ].join("\n");
+
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: titulo, body: corpo, labels: ["gafi"]
+            });
