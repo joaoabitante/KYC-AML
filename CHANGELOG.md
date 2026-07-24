@@ -4,6 +4,13 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Histórico anterior a este arquivo: ver commits do repositório e o README.
 
+## [2.3.0] - 2026-07-24
+### Corrigido
+- **Resolução CFC nº 1.721/2024 com vigência e revogação erradas** (publicadas na onda 1):
+  a entrada em vigor não foi 03/06/2024 — essa data foi adiada para **02/09/2024** pela
+  Resolução CFC nº 1.728/2024; e a norma revogada foi a Resolução CFC nº 1.530/2017,
+  não diretamente a 1.445/2013. Erro encontrado na checagem cruzada da onda 4.
+
 ## [2.2.0] - 2026-07-24
 ### Adicionado
 - **Listas do GAFI embarcadas na página.** A matriz perguntava "opera com jurisdição de
