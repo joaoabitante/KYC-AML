@@ -4,6 +4,40 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Histórico anterior a este arquivo: ver commits do repositório e o README.
 
+## [2.1.0] - 2026-07-24
+### Corrigido
+- **Contraste abaixo de AA em todos os rótulos de risco**, inclusive no aviso jurídico
+  (que estava em 2,30:1 — o pior do app). Separada a cor de preenchimento da cor de
+  tinta: `--low/--med/--high` continuam pintando gráficos e barras, e novos tokens
+  `--*-ink` / `--*-solid` cuidam do texto. Medido no navegador: 5,81 a 6,53:1 no tema
+  claro e 6,5 a 9,62:1 no escuro; botões ativos em 6,53:1 e 7,46:1.
+- **Matriz inutilizável em leitor de tela**: os botões Sim/Não não expunham o estado
+  escolhido. Agora têm `aria-pressed`, nome acessível com o texto da pergunta e o grupo
+  é rotulado. O medidor em canvas passou a ter descrição textual que acompanha o score,
+  e o resultado é anunciado em região `aria-live`.
+- **Nenhuma regra de foco visível** em todo o CSS. Adicionado `:focus-visible` com
+  contorno de 3px, ajustado para o tema escuro e para as faixas escuras (hero, cabeçalho
+  e rodapé).
+- **Menu sumia abaixo de 720px** sem substituto: virou faixa rolável horizontal.
+- Alvos de toque no celular passaram de 35px para 45px de altura.
+- **"Funciona offline" era promessa não cumprida** (não há service worker): trocado por
+  "Roda inteiro no seu navegador", que é verificável.
+
+### Adicionado
+- `@media print`: o relatório saía cortado em 560px ao imprimir. Agora sai inteiro, sem
+  cabeçalho, hero, painéis nem rodapé, com procedência no pé da página. Botão
+  "Imprimir / salvar PDF" na barra do relatório.
+- Campos opcionais de **identificação do cliente e do analista**, para o relatório servir
+  de papel de trabalho. Texto puro, nunca interpretado como HTML, sem persistência de
+  nenhum tipo, com aviso sobre a responsabilidade do usuário como controlador na LGPD.
+- Seção **Dúvidas frequentes** com 8 perguntas reais do público (obrigação do contador,
+  PEP, beneficiário final, relação entre faixa de risco e comunicação ao Coaf) e
+  dados estruturados `FAQPage`.
+- `Person` no JSON-LD com `hasCredential` do CRC-SP e `@id` estável compartilhado com os
+  demais projetos do autor; `datePublished`/`dateModified`.
+- Link "pular para a matriz" para navegação por teclado, `<noscript>` explicando por que
+  a matriz depende de JavaScript, e suporte a `prefers-reduced-motion`.
+
 ## [2.0.0] - 2026-07-24
 ### Corrigido
 - **Base regulatória com três ementas erradas.** A Resolução BCB nº 96/2021 trata de
