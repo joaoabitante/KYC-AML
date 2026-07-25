@@ -4,6 +4,18 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Histórico anterior a este arquivo: ver commits do repositório e o README.
 
+## [2.5.0] - 2026-07-24
+### Adicionado
+- **Cinco normas na base regulatória**, cada uma conferida em fonte oficial e passada por
+  checagem factual independente: Resolução Coaf nº 36/2021, Resolução Coaf nº 40/2021 (a que
+  define PEP — o fator de maior peso da matriz), Resolução CVM nº 50/2021 (com a alteração da
+  Resolução CVM nº 245/2026, vigente desde 15/07/2026), Circular Susep nº 612/2020 e
+  Lei nº 13.810/2019 (sanções do CSNU). A base passou de 6 para 11 normas.
+- Card **"Sanção não é risco: obrigação de resultado × obrigação de meio"**, explicando por que
+  a triagem em listas restritivas não é substituível por pontuação de risco — e dizendo com
+  todas as letras que esta ferramenta **não consulta listas de sanções**.
+- `og:image:alt` e `twitter:image:alt` para leitores de tela e prévias de compartilhamento.
+
 ## [2.4.0] - 2026-07-24
 ### Adicionado
 - Seção **Sobre o autor**, com a credencial CRC-SP, o motivo de a ferramenta existir e

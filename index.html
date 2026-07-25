@@ -26,10 +26,12 @@
   <meta property="og:image" content="https://kyc.contbit.tax/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="KYC AML Lite Brasil — matriz de risco PLD/FT que roda no navegador, sem cadastro." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Matriz de Risco PLD/FT — análise KYC gratuita e sem cadastro" />
   <meta name="twitter:description" content="Avalie o risco PLD/FT de um cliente em 9 fatores. Grátis, sem cadastro, roda inteiro no seu navegador." />
   <meta name="twitter:image" content="https://kyc.contbit.tax/og.png" />
+  <meta name="twitter:image:alt" content="KYC AML Lite Brasil — matriz de risco PLD/FT que roda no navegador, sem cadastro." />
 
   <script type="application/ld+json">
   {
@@ -443,6 +445,12 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 .import-label { cursor: pointer; display: inline-flex; align-items: center; }
 .import-label:focus-within { outline: 3px solid var(--blue-500); outline-offset: 2px; }
 #importJson:focus-visible + .import-label, .sr-only:focus + .import-label { outline: 3px solid var(--blue-500); }
+/* Card de sanções */
+.sancoes-card { margin-top: 18px; border-left: 4px solid var(--high-solid); }
+.sancoes-card h3 { font-size: 1.05rem; margin-bottom: 10px; }
+.sancoes-card p { color: var(--text-soft); font-size: .91rem; line-height: 1.65; margin-bottom: 10px; }
+.sancoes-card p:last-child { margin-bottom: 0; }
+
 /* Sobre o autor e doação */
 .sobre-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; align-items: start; }
 .sobre-card h3 { font-size: 1.15rem; margin-bottom: 2px; }
@@ -911,11 +919,48 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
           <p class="reg-fonte"><a href="https://www.bcb.gov.br/estabilidadefinanceira/buscanormas" target="_blank" rel="noopener noreferrer">Consultar no buscador de normas do BCB</a></p>
         </div>
         <div class="card reg-card">
+          <span class="reg-tag">Coaf</span>
+          <h3>Resolução Coaf nº 36/2021</h3>
+          <p>Disciplina as políticas, os procedimentos e os controles internos de PLD/FT/FPADM das pessoas obrigadas sob supervisão direta do Coaf — aquelas do art. 9º da Lei nº 9.613/1998 que não têm órgão regulador próprio. De 10/03/2021, com vigência desde 01/06/2021.</p>
+          <p class="reg-fonte"><a href="https://www.gov.br/coaf/pt-br/acesso-a-informacao/Institucional/a-atividade-de-supervisao/regulacao/supervisao/normas-1/resolucao-coaf-no-36-de-10-de-marco-de-2021" target="_blank" rel="noopener noreferrer">Texto oficial · Coaf</a></p>
+        </div>
+        <div class="card reg-card">
+          <span class="reg-tag">Coaf</span>
+          <h3>Resolução Coaf nº 40/2021</h3>
+          <p><strong>A norma que define quem é PEP</strong> — o fator de maior peso desta matriz. De 22/11/2021, em vigor desde 01/12/2021; revogou a Resolução Coaf nº 29/2017. Estende o tratamento a familiares, estreitos colaboradores e pessoas jurídicas de que participem, e mantém a condição de PEP por cinco anos após a saída do cargo. Nos casos de maior risco, o art. 2º exige três procedimentos mínimos: autorização prévia do sócio administrador para estabelecer ou dar prosseguimento à relação de negócios, diligências para estabelecer a origem dos recursos e monitoramento reforçado e contínuo.</p>
+          <p class="reg-fonte"><a href="https://www.gov.br/coaf/pt-br/acesso-a-informacao/Institucional/a-atividade-de-supervisao/regulacao/supervisao/normas-1/resolucao-coaf-no-40-de-22-de-novembro-de-2021" target="_blank" rel="noopener noreferrer">Texto oficial · Coaf</a></p>
+        </div>
+        <div class="card reg-card">
+          <span class="reg-tag">CVM</span>
+          <h3>Resolução CVM nº 50/2021</h3>
+          <p>Norma de PLD/FT/FPADM do mercado de valores mobiliários. De 31/08/2021 (DOU 02/09/2021); revogou a Instrução CVM nº 617/2019. Exige avaliação interna de risco periódica, controles internos, cadastro de clientes, diligência contínua e identificação do beneficiário final. Alterada pelas Resoluções CVM nº 179/2023 e nº 245, de 01/07/2026, esta em vigor desde 15/07/2026: a Resolução 245 modificou o art. 16 para exigir monitoramento contínuo e reforçado por critérios mais rigorosos de seleção de operações atípicas, independentemente da classificação de risco do investidor, e incluiu o art. 17-A, que sujeita a diligência reforçada as operações de investidores não residentes oriundos de jurisdições constantes das listas do GAFI.</p>
+          <p class="reg-fonte"><a href="https://conteudo.cvm.gov.br/legislacao/resolucoes/resol050.html" target="_blank" rel="noopener noreferrer">Texto oficial · CVM</a></p>
+        </div>
+        <div class="card reg-card">
+          <span class="reg-tag">Susep</span>
+          <h3>Circular Susep nº 612/2020</h3>
+          <p>Norma de PLD/FT do setor de seguros. De 18/08/2020, com vigência plena desde 03/05/2021; alterada pelas Circulares Susep nº 622/2021 e nº 705/2024. Alcança seguradoras, sociedades de capitalização, resseguradores, entidades abertas de previdência complementar e corretores, com abordagem baseada em risco, diretor responsável e avaliação anual de efetividade dos controles. Em 2026 a Susep colocou em consulta pública (Edital de Consulta Pública nº 2/2026, DOU de 29/05/2026, prazo de 30 dias corridos da publicação) uma minuta de resolução que revoga e substitui a Circular 612. Até 24/07/2026 a nova resolução não havia sido publicada e a Circular 612 continua vigente.</p>
+          <p class="reg-fonte"><a href="https://www.gov.br/susep/pt-br/assuntos/cidadao/pldftp/normativos-de-pldftp" target="_blank" rel="noopener noreferrer">Normativos de PLD/FTP · Susep</a></p>
+        </div>
+        <div class="card reg-card">
+          <span class="reg-tag">Sanções</span>
+          <h3>Lei nº 13.810/2019</h3>
+          <p>Dispõe sobre o cumprimento de sanções impostas por resoluções do Conselho de Segurança das Nações Unidas, incluída a indisponibilidade de ativos, e sobre a designação nacional de pessoas investigadas ou acusadas de terrorismo e de seu financiamento; revogou a Lei nº 13.170/2015. As resoluções do CSNU e as designações de seus comitês têm <strong>executoriedade imediata</strong> no Brasil: a indisponibilidade é cumprida sem depender de decisão judicial prévia. Regulamentada pelo Decreto nº 9.825/2019.</p>
+          <p class="reg-fonte"><a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/L13810.htm" target="_blank" rel="noopener noreferrer">Texto oficial · Planalto</a></p>
+        </div>
+        <div class="card reg-card">
           <span class="reg-tag">Internacional</span>
           <h3>Recomendações GAFI / FATF</h3>
           <p>As 40 Recomendações do Grupo de Ação Financeira são o padrão global de PLD/FT e consagram a abordagem baseada em risco. O GAFI mantém e atualiza periodicamente as listas de jurisdições sob monitoramento reforçado e de alto risco.</p>
           <p class="reg-fonte"><a href="https://www.fatf-gafi.org/en/publications/High-risk-and-other-monitored-jurisdictions.html" target="_blank" rel="noopener noreferrer">Jurisdições monitoradas · FATF</a></p>
         </div>
+      </div>
+
+      <div class="card sancoes-card">
+        <h3>Sanção não é risco: obrigação de resultado × obrigação de meio</h3>
+        <p>A matriz desta ferramenta gradua a <strong>intensidade da diligência</strong>. É obrigação de meio: quanto maior o risco, mais documento, mais aprovação formal e mais monitoramento — mas a relação de negócio pode existir, desde que controlada e registrada.</p>
+        <p>A verificação em listas de sanções funciona no sentido oposto. É <strong>obrigação de resultado</strong>: se a pessoa, a empresa ou a entidade está designada em resolução do Conselho de Segurança da ONU, os ativos ficam indisponíveis e a operação não se realiza, tenha a pontuação de risco dado 10 ou 100. Não existe diligência reforçada que compense uma designação.</p>
+        <p><strong>Esta ferramenta não consulta listas de sanções.</strong> Ela não verifica as listas do Conselho de Segurança da ONU, a lista pública de pessoas e entidades com ativos indisponíveis mantida pelo Departamento de Recuperação de Ativos e Cooperação Jurídica Internacional do Ministério da Justiça (art. 16 do Decreto nº 9.825/2019), a lista da OFAC nem qualquer outra, e o resultado exibido aqui não substitui essa checagem. A triagem em listas restritivas tem de ser feita à parte, na admissão do cliente e periodicamente, com fonte atualizada e registro do que foi consultado e quando.</p>
       </div>
 
       <div class="disclaimer card" role="note" id="aviso-juridico">
