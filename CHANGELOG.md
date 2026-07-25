@@ -4,6 +4,20 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Histórico anterior a este arquivo: ver commits do repositório e o README.
 
+## [3.0.0] - 2026-07-24
+### Adicionado
+- **Três páginas de conteúdo**, cada uma com título, descrição, canonical e dados
+  estruturados próprios — o site deixa de tentar ranquear tudo numa única URL:
+  - `obrigacoes-coaf.html` — quem é pessoa obrigada, tabela de setores com regulador e
+    norma, declaração de não ocorrência e cadastro no Siscoaf. Sete perguntas em FAQPage,
+    idênticas ao texto visível.
+  - `glossario.html` — 31 termos de PLD/FT, cada um com âncora estável e a norma aplicável,
+    marcados como DefinedTermSet.
+  - `metodologia.html` — a fundamentação pública do modelo: os nove pesos com justificativa,
+    as três faixas com a diligência esperada e as quatro regras de sobreposição. Conferido
+    fator por fator contra o código em produção.
+- Navegação, links contextuais e `sitemap.xml` cobrindo as quatro URLs.
+
 ## [2.5.0] - 2026-07-24
 ### Adicionado
 - **Cinco normas na base regulatória**, cada uma conferida em fonte oficial e passada por

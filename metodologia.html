@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Como os nove fatores, os pesos e as três faixas da matriz de risco PLD/FT foram definidos, com a norma que sustenta cada escolha e o que é apenas recorte didático." />
+  <meta name="author" content="João Carlos Bueno Abitante" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#07223f" />
+  <title>Metodologia da matriz de risco PLD/FT: pesos, faixas e fontes</title>
+  <link rel="canonical" href="https://kyc.contbit.tax/metodologia.html" />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/favicon-64.png" sizes="64x64" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph / Twitter (imagem servida pelo próprio domínio) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="KYC AML Lite Brasil" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:title" content="Metodologia da matriz de risco PLD/FT: pesos, faixas e fontes" />
+  <meta property="og:description" content="A fundamentação dos nove fatores, dos pesos, das faixas e das regras de sobreposição — com o que decorre de norma e o que é escolha didática declarada." />
+  <meta property="og:url" content="https://kyc.contbit.tax/metodologia.html" />
+  <meta property="og:image" content="https://kyc.contbit.tax/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Cartão do KYC AML Lite Brasil, ferramenta educacional de análise preliminar de risco PLD/FT que roda inteiramente no navegador." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Metodologia da matriz de risco PLD/FT: pesos, faixas e fontes" />
+  <meta name="twitter:description" content="Nove fatores, 110 pontos, quatro regras de sobreposição. A justificativa de cada peso e as limitações conhecidas do modelo." />
+  <meta name="twitter:image" content="https://kyc.contbit.tax/og.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Como esta matriz de risco foi construída",
+    "headline": "Metodologia da matriz de risco PLD/FT: pesos, faixas e fontes",
+    "url": "https://kyc.contbit.tax/metodologia.html",
+    "inLanguage": "pt-BR",
+    "datePublished": "2026-07-24",
+    "dateModified": "2026-07-24",
+    "description": "Fundamentação pública do modelo de análise preliminar de risco PLD/FT do KYC AML Lite Brasil: os nove fatores, a justificativa normativa de cada peso, as três faixas de diligência, as quatro regras de sobreposição e as limitações conhecidas.",
+    "about": {
+      "@type": "Thing",
+      "name": "Metodologia da matriz de risco PLD/FT do KYC AML Lite Brasil",
+      "description": "Soma ponderada de nove fatores binários, com total máximo de 110 pontos e faixas de risco cortadas em 30 e 60 pontos, complementada por quatro regras de sobreposição que impõem um piso à classificação final independentemente do escore apurado. A metodologia expõe a norma que sustenta a posição relativa de cada fator, declara quais números são recorte didático do autor e não decorrem de norma, indica a diligência esperada em cada faixa e relaciona as limitações conhecidas do modelo, entre elas a ausência de validação contra base de casos reais, a ausência de fatores mitigadores e o tratamento de uma escala ordinal como se fosse cardinal."
+    },
+    "author": {
+      "@type": "Person",
+      "@id": "https://joao.abitante.net/#pessoa",
+      "name": "João Carlos Bueno Abitante",
+      "jobTitle": "Contador",
+      "url": "https://joao.abitante.net/",
+      "hasCredential": {
+        "@type": "EducationalOccupationalCredential",
+        "credentialCategory": "Registro profissional",
+        "name": "CRC-SP 320961/O-4",
+        "recognizedBy": {
+          "@type": "Organization",
+          "name": "Conselho Regional de Contabilidade do Estado de São Paulo"
+        }
+      },
+      "sameAs": ["https://joao.abitante.net/", "https://github.com/joaoabitante"]
+    },
+    "publisher": { "@id": "https://joao.abitante.net/#pessoa" },
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": "https://kyc.contbit.tax/#site",
+      "name": "KYC AML Lite Brasil",
+      "url": "https://kyc.contbit.tax/",
+      "inLanguage": "pt-BR",
+      "publisher": { "@id": "https://joao.abitante.net/#pessoa" }
+    }
+  }
+  </script>
+  <script>
+  /* Aplica o tema ANTES de qualquer pintura: rodando só no DOMContentLoaded,
+     quem usa modo escuro via um flash branco a cada carregamento. */
+  (function () {
+    try {
+      var t = localStorage.getItem("kyc_theme");
+      if (!t) {
+        t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  })();
+  </script>
+  <style>
+/* =====================================================================
+   KYC AML Lite Brasil — style.css
+   Tema institucional fintech: azul escuro, branco, cinza claro
+   Suporte a modo claro/escuro via [data-theme]
+   ===================================================================== */
+
+:root {
+  /* Paleta base (modo claro) */
+  --navy-900: #07223f;
+  --navy-800: #0a2c52;
+  --navy-700: #0e3a6b;
+  --navy-600: #134e8f;
+  --blue-500: #1b6fd0;
+  --blue-400: #3d8be8;
+
+  --bg:        #eef2f7;
+  --bg-soft:   #f7f9fc;
+  --surface:   #ffffff;
+  --surface-2: #f1f5fa;
+  --border:    #d8e0eb;
+  --text:      #0f2440;
+  --text-soft: #4a5a73;
+  --text-mute: #5f7089;
+
+  /* --low/--med/--high: PREENCHIMENTO (gráficos, barras, botões ativos).
+     --*-ink: TINTA sobre --*-bg, calibrada para contraste AA (>= 4.5:1). */
+  --low:  #1f9d6b;
+  --low-bg: #e3f6ee;
+  --low-ink: #0f6b47;
+  --low-solid: #0f6b47;
+  --med:  #d99413;
+  --med-bg: #fdf2da;
+  --med-ink: #7a4f00;
+  --high: #d6453f;
+  --high-bg: #fbe5e4;
+  --high-ink: #a3231d;
+  --high-solid: #a3231d;
+
+  --shadow-sm: 0 1px 2px rgba(10,44,82,.06), 0 2px 8px rgba(10,44,82,.05);
+  --shadow-md: 0 10px 30px rgba(10,44,82,.10);
+  --radius:    16px;
+  --radius-sm: 10px;
+
+  --font-sans: "Segoe UI", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+}
+
+[data-theme="dark"] {
+  --bg:        #060f1c;
+  --bg-soft:   #0a1626;
+  --surface:   #0e1d33;
+  --surface-2: #122742;
+  --border:    #1d3354;
+  --text:      #e8eef7;
+  --text-soft: #aebdd2;
+  --text-mute: #8fa2bd;
+
+  --low-bg: #0d2a20;
+  --low-ink: #4ddba0;
+  --low-solid: #157a52;
+  --med-bg: #2e2410;
+  --med-ink: #f0b429;
+  --high-bg: #321515;
+  --high-ink: #ff8a84;
+  --high-solid: #b3352f;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow-md: 0 14px 40px rgba(0,0,0,.5);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 86px; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background .3s ease, color .3s ease;
+}
+
+.container { width: min(1140px, 92%); margin-inline: auto; }
+
+a { color: var(--blue-500); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
+
+/* ===================== HEADER ===================== */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+/* blur no header fixo é o item mais caro por frame em celular fraco:
+   só é aplicado onde há folga de tela e o usuário não pediu menos movimento */
+@media (min-width: 981px) and (prefers-reduced-motion: no-preference) {
+  .site-header { backdrop-filter: saturate(140%) blur(10px); }
+}
+.header-inner { display: flex; align-items: center; gap: 22px; padding: 12px 0; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  width: 42px; height: 42px; border-radius: 12px;
+  display: grid; place-items: center; color: #fff;
+  background: linear-gradient(140deg, var(--navy-700), var(--blue-500));
+  box-shadow: var(--shadow-sm);
+}
+.brand-text { display: flex; flex-direction: column; }
+.brand-title { font-weight: 800; font-size: 1.02rem; color: var(--text); letter-spacing: -.02em; }
+.brand-sub { font-size: .72rem; color: var(--text-mute); }
+
+.main-nav { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.main-nav a {
+  color: var(--text-soft); font-size: .9rem; font-weight: 600;
+  padding: 8px 12px; border-radius: 9px; text-decoration: none;
+  transition: background .2s, color .2s;
+}
+.main-nav a:hover { background: var(--surface-2); color: var(--text); }
+
+.theme-toggle {
+  width: 44px; height: 38px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  display: grid; place-items: center; transition: background .2s, transform .1s;
+}
+.theme-toggle:hover { background: var(--surface); }
+.theme-toggle:active { transform: scale(.94); }
+.theme-icon-dark { display: none; }
+[data-theme="dark"] .theme-icon-light { display: none; }
+[data-theme="dark"] .theme-icon-dark { display: block; }
+
+/* ===================== HERO ===================== */
+.hero {
+  background:
+    radial-gradient(900px 500px at 88% -10%, rgba(27,111,208,.18), transparent 60%),
+    linear-gradient(160deg, var(--navy-900), var(--navy-700) 60%, var(--navy-600));
+  color: #eaf2fb; padding: 64px 0 84px;
+  position: relative; overflow: hidden;
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 44px 44px; mask-image: radial-gradient(700px 400px at 80% 0%, #000, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner { position: relative; display: grid; grid-template-columns: 1.25fr .9fr; gap: 48px; align-items: center; }
+.pill {
+  display: inline-block; font-size: .76rem; font-weight: 700; letter-spacing: .03em;
+  padding: 6px 12px; border-radius: 999px; color: #bfe0ff;
+  background: rgba(61,139,232,.18); border: 1px solid rgba(61,139,232,.4);
+}
+.hero h1 { font-size: clamp(1.9rem, 3.6vw, 3rem); margin: 18px 0 14px; font-weight: 800; }
+.grad { background: linear-gradient(90deg, #6fb6ff, #b9d8ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p { color: #c3d6ee; max-width: 60ch; }
+.hero-actions { display: flex; gap: 12px; margin: 26px 0 22px; flex-wrap: wrap; }
+.hero-badges { list-style: none; display: flex; gap: 18px; flex-wrap: wrap; font-size: .85rem; color: #b6cce8; }
+
+/* Botões */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font: inherit; font-weight: 700; font-size: .92rem; cursor: pointer;
+  padding: 12px 20px; border-radius: 11px; border: 1px solid transparent;
+  transition: transform .08s, background .2s, box-shadow .2s, border-color .2s;
+  text-decoration: none;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: linear-gradient(135deg, var(--blue-500), var(--navy-600)); color: #fff; box-shadow: var(--shadow-sm); }
+.btn-primary:hover { box-shadow: 0 8px 24px rgba(27,111,208,.4); text-decoration: none; }
+.btn-ghost { background: var(--surface); color: var(--text); border-color: var(--border); }
+.btn-ghost:hover { background: var(--surface-2); text-decoration: none; }
+.hero .btn-ghost { background: rgba(255,255,255,.08); color: #eaf2fb; border-color: rgba(255,255,255,.25); }
+.hero .btn-ghost:hover { background: rgba(255,255,255,.16); }
+.btn-sm { padding: 8px 14px; font-size: .84rem; border-radius: 9px; }
+.btn-block { width: 100%; }
+
+/* Card medidor no hero */
+.hero-gauge { text-align: center; }
+.card-mini-title { font-size: .82rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-mute); margin-bottom: 10px; font-weight: 700; }
+.gauge-readout { margin-top: -10px; }
+.gauge-score { font-size: 2.6rem; font-weight: 800; color: var(--text); }
+.gauge-max { color: var(--text-mute); font-weight: 600; }
+
+/* ===================== CARDS / SECTIONS ===================== */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm);
+}
+.main-stack { display: flex; flex-direction: column; gap: 72px; padding: 70px 0; }
+.section-head { margin-bottom: 26px; }
+.section-head h2 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 800; }
+.section-head h2::before {
+  content: ""; display: inline-block; width: 34px; height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg, var(--blue-500), var(--navy-600)); margin-right: 12px; vertical-align: middle;
+}
+.section-desc { color: var(--text-soft); max-width: 75ch; margin-top: 6px; }
+
+/* ===================== DASHBOARD ===================== */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+}
+.stat-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+.stat-total::before { background: var(--blue-500); }
+.stat-low::before   { background: var(--low); }
+.stat-med::before   { background: var(--med); }
+.stat-high::before  { background: var(--high); }
+.stat-label { display: block; font-size: .8rem; color: var(--text-mute); font-weight: 600; margin-bottom: 6px; }
+.stat-value { font-size: 2.3rem; font-weight: 800; }
+.stat-low .stat-value { color: var(--low-ink); }
+.stat-med .stat-value { color: var(--med-ink); }
+.stat-high .stat-value { color: var(--high-ink); }
+
+.dash-bottom { display: grid; grid-template-columns: 320px 1fr; gap: 20px; margin-top: 20px; }
+.chart-card { text-align: center; }
+.chart-legend { list-style: none; display: flex; justify-content: center; gap: 18px; margin-top: 12px; font-size: .85rem; color: var(--text-soft); flex-wrap: wrap; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+.dot-low { background: var(--low); } .dot-med { background: var(--med); } .dot-high { background: var(--high); }
+.howto { padding-left: 20px; color: var(--text-soft); display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+
+/* ===================== MATRIZ ===================== */
+.matrix-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+.matrix-form { display: flex; flex-direction: column; gap: 12px; }
+.q-item {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 16px 18px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-sm);
+  transition: border-color .2s, box-shadow .2s;
+}
+.q-item.is-risk { border-color: color-mix(in srgb, var(--high) 50%, var(--border)); }
+.q-main { flex: 1; }
+.q-text { font-weight: 600; font-size: .96rem; }
+.q-meta { font-size: .76rem; color: var(--text-mute); margin-top: 2px; }
+.q-weight { font-weight: 700; color: var(--blue-500); }
+
+.segmented { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
+.segmented button {
+  font: inherit; font-weight: 700; font-size: .82rem; cursor: pointer; border: none; background: transparent;
+  color: var(--text-soft); padding: 7px 16px; border-radius: 8px; transition: background .15s, color .15s;
+}
+.segmented button.active-no { background: var(--low-solid); color: #fff; }
+.segmented button.active-yes { background: var(--high-solid); color: #fff; }
+/* Para a pergunta invertida (origem comprovada), inverter as cores semânticas */
+.segmented.inverted button.active-no { background: var(--high-solid); color: #fff; }
+.segmented.inverted button.active-yes { background: var(--low-solid); color: #fff; }
+
+/* Painel lateral */
+.matrix-side { position: sticky; top: 90px; }
+.side-score { margin-bottom: 10px; }
+.side-score-value { font-size: 2.6rem; font-weight: 800; }
+.side-score-max { color: var(--text-mute); font-size: .9rem; font-weight: 600; }
+.side-sub { margin: 20px 0 10px; font-size: .82rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-mute); }
+.bands { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: .88rem; color: var(--text-soft); }
+.band-chip { display: inline-block; min-width: 64px; text-align: center; font-weight: 700; font-size: .78rem; padding: 3px 8px; border-radius: 7px; margin-right: 8px; }
+.band-low { background: var(--low-bg); color: var(--low-ink); }
+.band-med { background: var(--med-bg); color: var(--med-ink); }
+.band-high { background: var(--high-bg); color: var(--high-ink); }
+.side-actions { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+
+/* Badge de risco + progresso */
+.risk-badge {
+  display: inline-block; font-weight: 800; font-size: .82rem; letter-spacing: .02em;
+  padding: 7px 14px; border-radius: 999px; margin: 6px 0;
+}
+.risk-low  { background: var(--low-bg);  color: var(--low-ink); }
+.risk-med  { background: var(--med-bg);  color: var(--med-ink); }
+.risk-high { background: var(--high-bg); color: var(--high-ink); }
+
+.progress-wrap { height: 10px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; margin-top: 12px; }
+.progress-bar { height: 100%; width: 0%; border-radius: 999px; background: var(--low); transition: width .4s ease, background .4s ease; }
+
+/* ===================== RELATÓRIO ===================== */
+.report-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.toolbar-msg { font-size: .82rem; font-weight: 700; color: var(--low-ink); margin-left: auto; }
+.report-output {
+  font-family: var(--font-mono); font-size: .86rem; line-height: 1.7;
+  white-space: pre-wrap; word-break: break-word; color: var(--text);
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 20px; min-height: 200px; max-height: 560px; overflow: auto;
+}
+
+/* ===================== EDUCAÇÃO ===================== */
+.edu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.edu-card h3 { font-size: 1.12rem; margin-bottom: 8px; color: var(--navy-600); }
+[data-theme="dark"] .edu-card h3 { color: var(--blue-400); }
+.edu-card p { color: var(--text-soft); font-size: .94rem; }
+.edu-wide { grid-column: 1 / -1; }
+
+/* ===================== REGULATÓRIO ===================== */
+.reg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.reg-card { position: relative; }
+.reg-tag {
+  display: inline-block; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+  padding: 3px 9px; border-radius: 7px; margin-bottom: 10px;
+  background: var(--surface-2); color: var(--blue-500); border: 1px solid var(--border);
+}
+.reg-card h3 { font-size: 1.02rem; margin-bottom: 6px; }
+.reg-card p { color: var(--text-soft); font-size: .9rem; }
+/* Estado "não respondido" e regras de sobreposição */
+.risk-badge.risk-pending { background: var(--surface-2); color: var(--text-soft); border: 1px dashed var(--border); }
+.q-item.is-pending { opacity: .96; }
+.q-item.is-pending .q-text::after { content: " • não respondida"; color: var(--text-soft); font-size: .8rem; font-weight: 500; }
+.matrix-progress { font-size: .84rem; color: var(--text-soft); margin-top: 10px; line-height: 1.45; }
+.matrix-progress.is-complete { color: var(--low-ink); font-weight: 600; }
+.override-box { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: rgba(214, 158, 46, .10); border: 1px solid var(--med); }
+.override-box strong { display: block; font-size: .85rem; color: var(--med-ink); margin-bottom: 6px; }
+.override-box ul { margin: 0; padding-left: 18px; }
+.override-box li { font-size: .82rem; color: var(--text-soft); line-height: 1.5; margin-bottom: 4px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.revisao-box { margin-top: 12px; padding: 9px 11px; border-radius: 8px; background: rgba(27,111,208,.09); border: 1px solid var(--blue-500); font-size: .8rem; color: var(--text-soft); line-height: 1.5; }
+.import-label { cursor: pointer; display: inline-flex; align-items: center; }
+.import-label:focus-within { outline: 3px solid var(--blue-500); outline-offset: 2px; }
+#importJson:focus-visible + .import-label, .sr-only:focus + .import-label { outline: 3px solid var(--blue-500); }
+/* Sobre o autor e doação */
+.sobre-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; align-items: start; }
+.sobre-card h3 { font-size: 1.15rem; margin-bottom: 2px; }
+.sobre-cargo { font-size: .84rem; font-weight: 700; color: var(--blue-500); margin-bottom: 12px; }
+.sobre-card p { color: var(--text-soft); font-size: .93rem; line-height: 1.65; margin-bottom: 10px; }
+.sobre-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+.sobre-links a { font-size: .86rem; font-weight: 700; color: var(--blue-500); text-decoration: none; border-bottom: 1px solid currentColor; }
+.doacao-card .btn { margin: 6px 0 12px; }
+.doacao-nota { font-size: .78rem !important; color: var(--text-mute) !important; line-height: 1.5 !important; }
+@media (max-width: 980px) { .sobre-grid { grid-template-columns: 1fr; } }
+
+/* Log de atualizações */
+.log-list { display: flex; flex-direction: column; gap: 12px; }
+.log-item { border-left: 4px solid var(--blue-500); }
+.log-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.log-versao { font-family: var(--font-mono); font-size: .84rem; font-weight: 700; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; }
+.log-head time { font-size: .82rem; color: var(--text-soft); font-weight: 600; }
+.log-tag { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 5px; }
+.log-tag.log-novo { background: var(--low-bg); color: var(--low-ink); }
+.log-tag.log-fix { background: var(--med-bg); color: var(--med-ink); }
+.log-item p { color: var(--text-soft); font-size: .92rem; line-height: 1.65; margin: 0; }
+.section-desc a { color: var(--blue-500); font-weight: 600; }
+
+/* Canvas responsivo: sem max-width, o medidor de 300px estourava telas de ~370px */
+#gaugeCanvas, #donutCanvas { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+/* Reserva de espaço do formulário injetado por JS, para não deslocar o layout */
+#riskForm { min-height: 620px; }
+@media (max-width: 720px) { #riskForm { min-height: 0; } }
+
+/* Checklist documental */
+.checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.check-card { opacity: .62; transition: opacity .2s, border-color .2s; }
+.check-card.is-aplicavel { opacity: 1; border-color: var(--blue-500); box-shadow: var(--shadow-sm); }
+.check-card h3 { font-size: 1rem; margin-bottom: 4px; }
+.check-tag { display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-mute); margin-bottom: 10px; }
+.check-card.is-aplicavel .check-tag { color: var(--blue-500); }
+.check-card ul { margin: 0; padding-left: 18px; }
+.check-card li { font-size: .86rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 6px; }
+.checklist-nota { font-size: .8rem; color: var(--text-soft); margin-top: 16px; }
+@media (max-width: 720px) { .checklist-grid { grid-template-columns: 1fr; } }
+
+/* Painel do GAFI dentro da matriz */
+.gafi-panel { margin-top: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); }
+.gafi-panel summary { cursor: pointer; padding: 8px 12px; font-size: .82rem; font-weight: 700; color: var(--blue-500); list-style: none; }
+.gafi-panel summary::-webkit-details-marker { display: none; }
+.gafi-panel summary::before { content: "🌐 "; }
+.gafi-panel[open] summary { border-bottom: 1px solid var(--border); }
+.gafi-grupo { padding: 10px 12px 4px; }
+.gafi-grupo strong { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+.gafi-grupo strong.gafi-alto { color: var(--high-ink); }
+.gafi-grupo strong.gafi-cinza { color: var(--med-ink); }
+.gafi-desc { font-size: .78rem; color: var(--text-soft); margin: 3px 0 6px; line-height: 1.5; }
+.gafi-grupo ul { display: flex; flex-wrap: wrap; gap: 4px 6px; margin: 0; padding: 0; list-style: none; }
+.gafi-grupo li { font-size: .78rem; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; color: var(--text); }
+.gafi-rodape { font-size: .74rem; color: var(--text-soft); padding: 8px 12px 0; margin: 0; line-height: 1.5; }
+.gafi-link { display: inline-block; margin: 6px 12px 12px; font-size: .78rem; font-weight: 700; color: var(--blue-500); }
+
+/* FAQ */
+.faq-list { display: flex; flex-direction: column; gap: 12px; }
+.faq-item { padding: 0; }
+.faq-item summary {
+  cursor: pointer; list-style: none; padding: 16px 18px;
+  font-weight: 700; font-size: 1rem; color: var(--text);
+  display: flex; align-items: center; gap: 10px;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::before { content: "+"; color: var(--blue-500); font-weight: 800; font-size: 1.15rem; line-height: 1; }
+.faq-item[open] summary::before { content: "–"; }
+.faq-item summary:hover { color: var(--blue-500); }
+.faq-item p { padding: 0 18px 16px 40px; margin: 0; color: var(--text-soft); font-size: .93rem; line-height: 1.65; }
+@media print { .faq-item p { padding-left: 18px; } }
+
+/* Identificação opcional do relatório */
+.report-ident { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.ident-field { display: flex; flex-direction: column; gap: 5px; }
+.ident-field label { font-size: .8rem; font-weight: 700; color: var(--text-soft); }
+.ident-opt { font-weight: 500; color: var(--text-mute); }
+.ident-field input {
+  font-family: inherit; font-size: .92rem; padding: 9px 11px; color: var(--text);
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.ident-field input::placeholder { color: var(--text-mute); }
+.ident-aviso { grid-column: 1 / -1; font-size: .78rem; color: var(--text-soft); line-height: 1.55; margin: 0; }
+@media (max-width: 720px) { .report-ident { grid-template-columns: 1fr; } }
+.reg-fonte { margin-top: 8px; }
+.reg-fonte a { color: var(--blue-500); font-size: .84rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
+.reg-fonte a:hover { color: var(--navy-700); }
+[data-theme="dark"] .reg-fonte a { color: var(--blue-400); }
+[data-theme="dark"] .reg-fonte a:hover { color: #8fc0f5; }
+
+.disclaimer {
+  margin-top: 26px; border-left: 5px solid var(--med);
+  background: var(--med-bg);
+}
+.disclaimer strong { display: block; margin-bottom: 6px; color: var(--med-ink); font-size: 1rem; }
+.disclaimer p { color: var(--text-soft); font-size: .92rem; }
+
+/* ===================== FOOTER ===================== */
+.site-footer { background: var(--navy-900); color: #c3d6ee; padding: 34px 0; margin-top: 40px; }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.site-footer .brand-title { color: #fff; }
+.footer-note { font-size: .82rem; color: #9fb6d4; margin-top: 4px; }
+.footer-autor { font-size: .82rem; color: #c3d6ee; margin-top: 8px; line-height: 1.5; }
+.footer-autor strong { color: #fff; }
+.footer-mini { font-size: .8rem; color: #8aa3c4; max-width: 40ch; text-align: right; }
+
+/* ===================== RESPONSIVO ===================== */
+@media (max-width: 980px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .matrix-layout { grid-template-columns: 1fr; }
+  .matrix-side { position: static; }
+  .dash-bottom { grid-template-columns: 1fr; }
+  .reg-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  /* O menu vira uma faixa rolável em vez de sumir */
+  .main-nav {
+    order: 3; width: 100%; overflow-x: auto; gap: 14px;
+    padding-top: 8px; -webkit-overflow-scrolling: touch;
+  }
+  .main-nav a { white-space: nowrap; font-size: .84rem; }
+  .header-inner { flex-wrap: wrap; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .edu-grid, .reg-grid { grid-template-columns: 1fr; }
+  .footer-mini { text-align: left; }
+  .q-item { flex-direction: column; align-items: stretch; }
+  /* Alvos de toque confortáveis (>= 44px) no celular */
+  .segmented button { padding: 12px 20px; min-height: 44px; flex: 1; }
+  .segmented { display: flex; }
+  .btn-sm { min-height: 44px; }
+}
+
+/* Animação de entrada */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.section, .hero-gauge { animation: rise .5s ease both; }
+
+/* ===================== ACESSIBILIDADE ===================== */
+:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; border-radius: 6px; }
+[data-theme="dark"] :focus-visible { outline-color: var(--blue-400); }
+.hero :focus-visible, .site-header :focus-visible, .site-footer :focus-visible { outline-color: #bfe0ff; }
+
+/* Link para pular direto ao conteúdo (teclado / leitor de tela) */
+.skip-link {
+  position: absolute; left: 8px; top: -48px; z-index: 100;
+  background: var(--navy-800); color: #fff; padding: 10px 16px;
+  border-radius: 0 0 8px 8px; font-weight: 700; font-size: .9rem; text-decoration: none;
+  transition: top .15s ease;
+}
+.skip-link:focus { top: 0; }
+
+/* Descrição textual dos gráficos, só para leitores de tela */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section, .hero-gauge { animation: none; }
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* ===================== IMPRESSÃO / PDF ===================== */
+@media print {
+  .site-header, .hero, .main-nav, .report-toolbar, .side-actions,
+  #dashboard, #educacao, #sobre, #atualizacoes, #faq, #checklist,
+  .theme-toggle, .site-footer, .skip-link { display: none !important; }
+  body { background: #fff; color: #000; }
+  .section { animation: none; padding: 0; }
+  .card { box-shadow: none; border: 1px solid #999; page-break-inside: avoid; break-inside: avoid; }
+  .report-output {
+    max-height: none !important; overflow: visible !important;
+    border: 0; background: #fff; color: #000; font-size: 11pt; white-space: pre-wrap;
+  }
+  #relatorio::after {
+    content: "Gerado em kyc.contbit.tax";
+    display: block; margin-top: 12pt; font-size: 9pt; color: #444;
+  }
+  @page { margin: 14mm; }
+}
+
+/* =====================================================================
+   ACRÉSCIMOS DESTA PÁGINA (metodologia.html)
+   ===================================================================== */
+
+/* Navegação de retorno no topo do conteúdo */
+.voltar { margin-bottom: 22px; font-size: .9rem; }
+.voltar a {
+  font-weight: 700; color: var(--blue-500); text-decoration: none;
+  border-bottom: 1px solid currentColor; padding-bottom: 1px;
+}
+.voltar a:hover { color: var(--navy-700); }
+[data-theme="dark"] .voltar a { color: var(--blue-400); }
+[data-theme="dark"] .voltar a:hover { color: #8fc0f5; }
+
+/* Página atual no menu */
+.main-nav a[aria-current="page"] {
+  background: var(--surface-2); color: var(--text);
+  box-shadow: inset 0 -2px 0 var(--blue-500);
+}
+
+/* Tabelas largas: rolagem própria, o corpo da página nunca rola na horizontal */
+.tabela-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.tab-meto { width: 100%; border-collapse: collapse; font-size: .9rem; text-align: left; }
+.tab-meto-fatores { min-width: 640px; }
+.tab-meto-faixas { min-width: 620px; }
+.tab-meto-regras { min-width: 640px; }
+.tab-meto caption {
+  caption-side: bottom; text-align: left; color: var(--text-mute);
+  font-size: .8rem; padding-top: 12px; line-height: 1.55;
+}
+.tab-meto thead tr { border-bottom: 2px solid var(--border); }
+.tab-meto th[scope="col"] {
+  padding: 10px 12px; color: var(--text-mute); font-weight: 700;
+  font-size: .76rem; text-transform: uppercase; letter-spacing: .05em;
+}
+.tab-meto tbody tr { border-bottom: 1px solid var(--border); }
+.tab-meto tbody tr:last-child { border-bottom: 0; }
+.tab-meto tbody th[scope="row"] { padding: 12px; color: var(--text); vertical-align: top; font-weight: 700; }
+.tab-meto td { padding: 12px; vertical-align: top; color: var(--text-soft); }
+.tab-meto .col-peso, .tab-meto .cel-peso { white-space: nowrap; }
+.tab-meto .cel-peso { font-weight: 800; color: var(--text); }
+.faixa-pontos { display: block; margin-top: 4px; color: var(--text-mute); font-size: .82rem; font-weight: 600; }
+.piso-nota { display: block; margin-top: 4px; font-size: .82rem; }
+
+/* Listas de texto corrido dentro dos cards */
+.lista-meto { margin: 8px 0 0; padding-left: 20px; color: var(--text-soft); line-height: 1.7; }
+.lista-meto li + li { margin-top: 8px; }
+.card h3 + .sub-desc { color: var(--text-soft); margin: 6px 0 16px; }
+.sub-h3 { margin-top: 20px; }
+.nota-meto { margin-top: 16px; }
+
+/* Fontes oficiais conferidas */
+.fontes-lista { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.fontes-lista li { color: var(--text-soft); font-size: .9rem; line-height: 1.6; }
+.fontes-lista a { font-weight: 700; color: var(--blue-500); border-bottom: 1px solid currentColor; text-decoration: none; }
+.fontes-lista a:hover { color: var(--navy-700); }
+[data-theme="dark"] .fontes-lista a { color: var(--blue-400); }
+[data-theme="dark"] .fontes-lista a:hover { color: #8fc0f5; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <noscript>
+    <div class="disclaimer card" role="note" style="margin:24px auto;max-width:900px">
+      <strong>JavaScript desativado</strong>
+      <p>Esta página é texto estático: a metodologia, as tabelas e as fontes continuam
+      inteiramente legíveis sem JavaScript. A única função que depende dele é o botão de
+      alternar entre o modo claro e o escuro.</p>
+    </div>
+  </noscript>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">KYC AML Lite</span>
+          <span class="brand-sub">Brasil · Análise Preliminar de Risco</span>
+        </div>
+      </div>
+
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="index.html#dashboard">Painel</a>
+        <a href="index.html#matriz">Matriz</a>
+        <a href="metodologia.html" aria-current="page">Metodologia</a>
+        <a href="index.html#relatorio">Relatório</a>
+        <a href="index.html#educacao">Educação</a>
+        <a href="index.html#regulatorio">Base Legal</a>
+        <a href="index.html#checklist">Checklist</a>
+        <a href="index.html#faq">Dúvidas</a>
+        <a href="index.html#sobre">Autor</a>
+      </nav>
+
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Alternar modo escuro">
+        <span class="theme-icon theme-icon-light" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </span>
+        <span class="theme-icon theme-icon-dark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <main id="conteudo" class="container main-stack">
+    <section class="section">
+
+      <p class="voltar"><a href="index.html">← Voltar para a matriz de risco</a></p>
+
+      <div class="section-head">
+        <h2>Como esta matriz foi construída</h2>
+        <p class="section-desc">A fundamentação dos nove fatores, dos pesos, das faixas e das regras de sobreposição. Publicada para que qualquer pessoa possa conferir, discordar e ajustar. Normas citadas conferidas nos textos oficiais em 24/07/2026.</p>
+      </div>
+
+      <div class="card">
+        <h3>O que a matriz é</h3>
+        <p>Uma soma ponderada de nove fatores binários. Cada fator marcado como "de risco" acrescenta seu peso ao escore; o total máximo é 110 pontos. Depois da soma, quatro regras de sobreposição podem elevar a classificação final. O resultado é uma triagem preliminar: serve para ordenar clientes por prioridade de diligência e para registrar por escrito o raciocínio que levou àquela classificação.</p>
+
+        <h3 class="sub-h3">O que a matriz não é</h3>
+        <ul class="lista-meto">
+          <li><strong>Não é modelo estatístico.</strong> Os pesos não vieram de regressão, de escoragem nem de qualquer estimativa a partir de dados. São julgamento profissional ancorado em norma e em tipologia reconhecida.</li>
+          <li><strong>Não foi validada contra base de casos reais.</strong> Não existe aqui taxa de acerto, falso positivo ou falso negativo medida contra casos confirmados de lavagem. Quem apresentar esta matriz como validada estará dizendo mais do que ela sustenta.</li>
+          <li><strong>Não substitui a avaliação interna de risco da organização</strong> — a que a Circular BCB nº 3.978/2020 exige no art. 10 e que a Resolução CFC nº 1.721/2024 pressupõe no art. 5º ao mandar que política, procedimentos e controles internos sejam compatíveis com o porte, o volume e o escopo dos trabalhos.</li>
+          <li><strong>Não gera nem dispensa a comunicação ao Coaf.</strong> Escore alto não é comunicação; escore baixo não é dispensa. A obrigação de comunicar ao Coaf segue o art. 6º da Resolução CFC nº 1.721/2024 e a Lei nº 9.613/1998. E, se nada houver a comunicar durante o ano civil, o art. 7º ainda exige a declaração de não ocorrência — essa ao CFC, até 31 de janeiro do ano seguinte.</li>
+        </ul>
+        <p class="nota-meto">Uma observação sobre a origem das normas citadas: a Circular BCB nº 3.978/2020 obriga instituições autorizadas a funcionar pelo Banco Central, não profissionais da contabilidade. Ela é usada aqui como referência técnica por ser a norma brasileira de PLD/FT com maior detalhamento de procedimento. Para contadores e organizações contábeis, a norma vinculante é a Resolução CFC nº 1.721/2024.</p>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h3>Os nove fatores e a justificativa de cada peso</h3>
+        <p class="sub-desc">Ordenados do maior para o menor peso. Onde a escolha do número é arbitrária, está dito que é arbitrária.</p>
+
+        <div class="tabela-scroll">
+          <table class="tab-meto tab-meto-fatores">
+            <caption>Os nove fatores da matriz, na versão 2.0, conferidos peso por peso contra o código da ferramenta. Soma dos pesos: 110 pontos. Fator invertido: em "origem dos recursos", a resposta de risco é NÃO.</caption>
+            <thead>
+              <tr>
+                <th scope="col">Fator</th>
+                <th scope="col" class="col-peso">Peso</th>
+                <th scope="col">Por que esse peso</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Pessoa exposta politicamente (PEP)</th>
+                <td class="cel-peso">20</td>
+                <td>É o único fator que as normas tratam com procedimento próprio e decisão de instância superior. A Recomendação 12 do GAFI exige, para a PEP estrangeira, além da diligência normal: aprovação da alta gerência para estabelecer ou manter a relação, medidas razoáveis para estabelecer a origem da riqueza e dos recursos e monitoramento reforçado contínuo. Para a PEP nacional e para quem ocupa função importante em organização internacional, essas três medidas são exigidas nas relações de negócio de mais alto risco. A norma brasileira é mais severa: a Circular BCB nº 3.978/2020 manda verificar a condição de PEP e também a de representante, familiar ou estreito colaborador (art. 19), sem distinguir nacional de estrangeira, determina que a avaliação sobre iniciar ou manter o relacionamento seja feita por nível hierárquico superior ao de quem autoriza (art. 19, § 3º) e inclui as operações com PEP entre as de monitoramento obrigatório (art. 39, I, "d" e "e"). A Resolução CFC nº 1.721/2024 exige o enquadramento como PEP já no cadastro do contratante (art. 3º, I, "d", e II, "c"). O que a norma sustenta é a posição no topo; que o número seja 20 e não 18 ou 22 é escolha nossa.</td>
+              </tr>
+              <tr>
+                <th scope="row">Origem dos recursos não comprovada</th>
+                <td class="cel-peso">15</td>
+                <td>Fator invertido: pontua quando a origem <em>não</em> está comprovada. Pesa alto porque é pré-condição da análise — sem origem, os demais fatores ficam sem lastro. A Circular BCB nº 3.978/2020 exige registrar a origem em depósito ou aporte em espécie a partir de R$ 50.000,00 e, na recusa do cliente em informá-la, registrar o fato e usá-lo no monitoramento (art. 34, III, e parágrafo único), e coloca a incompatibilidade entre operação, capacidade financeira e patrimônio entre as situações a monitorar (art. 39, I, "c"). O Guia para Abordagem Baseada em Risco, Anexo Único da Resolução CFC nº 1.721/2024, orienta obter informação sobre a origem dos fundos e a origem da riqueza do cliente, com documentação comprobatória. Registre-se o estatuto desse Guia: o art. 14 da Resolução diz que ele tem caráter unicamente orientativo — as citações que fazemos a ele nesta seção descrevem orientação, não obrigação autônoma.</td>
+              </tr>
+              <tr>
+                <th scope="row">Jurisdição de maior risco / país monitorado pelo GAFI</th>
+                <td class="cel-peso">15</td>
+                <td>A Recomendação 19 do GAFI (países de alto risco) exige diligência reforçada nas relações e operações com pessoas de países assim identificados e prevê contramedidas. A Circular BCB nº 3.978/2020 inclui, entre as situações de monitoramento obrigatório, as operações oriundas ou destinadas a países ou territórios com deficiências estratégicas na implementação das recomendações do GAFI (art. 39, I, "g"). O Guia ABR do CFC trata risco geográfico e orienta atenção especial às jurisdições consideradas pelo GAFI de alto risco ou com deficiências estratégicas em matéria de PLD/FTP, e também às dependências ou países listados pela Receita Federal como de tributação favorecida ou regime fiscal privilegiado. O Guia não nomeia nenhum país: remete à lista do GAFI. Recebe o mesmo peso da origem não comprovada porque os dois fatores são igualmente objetivos: ou a jurisdição está na lista, ou não está.</td>
+              </tr>
+              <tr>
+                <th scope="row">Ativos virtuais (criptoativos)</th>
+                <td class="cel-peso">12</td>
+                <td>A Recomendação 15 do GAFI (novas tecnologias) manda identificar e avaliar o risco decorrente de novos produtos, práticas e tecnologias. A Lei nº 14.478/2022 incluiu as prestadoras de serviços de ativos virtuais entre as pessoas obrigadas da Lei nº 9.613/1998, e a Resolução BCB nº 520/2025 disciplina a constituição e o funcionamento dessas sociedades, com vigência a partir de 02/02/2026. O Guia ABR do CFC cita prestadores de serviços em ativos virtuais entre os negócios intensivos em espécie e trata como fator de risco a insistência, sem justificativa adequada, em operar por ativos virtuais para preservar o anonimato. Fica abaixo do bloco de 15 por uma razão declarada: operar com criptoativo é lícito e hoje regulado — o risco está no anonimato e na falta de rastro, não no ativo.</td>
+              </tr>
+              <tr>
+                <th scope="row">Estrutura societária complexa ou opaca</th>
+                <td class="cel-peso">12</td>
+                <td>A Recomendação 24 do GAFI trata da transparência e da propriedade de pessoas jurídicas. A Circular BCB nº 3.978/2020 exige analisar a cadeia de participação societária até a pessoa natural caracterizada como beneficiário final (art. 24), com valor de referência de participação baseado em risco e nunca superior a 25% (art. 25, § 1º), e inclui entre as situações a monitorar os clientes e operações cujo beneficiário final não seja identificável (art. 39, I, "f"). O Guia ABR do CFC arrola, entre os fatores de risco de cliente pessoa jurídica, a estrutura organizacional demasiadamente complexa e a estrutura que dificulta a identificação do verdadeiro beneficiário. Mesmo peso do fator anterior, pela mesma razão: complexidade societária tem usos legítimos — holding, sucessão, investimento estrangeiro. O que agrava é a opacidade.</td>
+              </tr>
+              <tr>
+                <th scope="row">Movimentação financeira internacional</th>
+                <td class="cel-peso">10</td>
+                <td>A Recomendação 16 do GAFI trata das transferências eletrônicas e a Circular BCB nº 3.978/2020 exige, nas operações de pagamento, recebimento e transferência, o registro das informações necessárias à identificação da origem e do destino dos recursos (art. 30). Peso intermediário porque movimentar recursos com o exterior é, isoladamente, atividade comum e lícita: o fator só ganha força somado a jurisdição de maior risco, origem não comprovada ou estrutura opaca. O número 10 é escolha didática — o que se sustenta é ficar abaixo dos fatores de 12 e acima dos de 8.</td>
+              </tr>
+              <tr>
+                <th scope="row">Uso relevante de dinheiro em espécie</th>
+                <td class="cel-peso">10</td>
+                <td>A Circular BCB nº 3.978/2020 escalona exigências por valor: identificação do portador em operações em espécie acima de R$ 2.000,00 (art. 33), origem dos recursos em depósito ou aporte a partir de R$ 50.000,00 (art. 34), finalidade em saque a partir de R$ 50.000,00 (art. 35) e provisionamento prévio de três dias úteis para esses saques (art. 36). O art. 39, I, "a" e "b", manda monitorar o artifício destinado a burlar esses procedimentos — o fracionamento — e as operações em espécie com indício de ocultação. A Resolução CFC nº 1.721/2024 obriga o profissional a comunicar ao Coaf, por COE, a operação em espécie acima de R$ 100.000,00 no mês, ainda que fracionada, independentemente de indício de ilícito (art. 6º, III). Mesmo peso da movimentação internacional pelo mesmo motivo: espécie é legal; o sinal está no volume, na habitualidade e no fracionamento, que esta pergunta binária não mede.</td>
+              </tr>
+              <tr>
+                <th scope="row">Terceiros ou interpostas pessoas nas operações</th>
+                <td class="cel-peso">8</td>
+                <td>A Circular BCB nº 3.978/2020 estende os procedimentos de identificação, qualificação e classificação aos administradores de clientes pessoa jurídica e aos representantes de clientes, de forma compatível com a abrangência da representação (art. 21). O Guia ABR do CFC aponta a representação pelos mesmos procuradores que formalmente não integram o quadro societário, o uso de representante sem legalidade fiscal, comercial ou econômica aparente e a procuração com poderes incomuns. Peso baixo porque, isolada, a atuação por procurador é rotina em qualquer escritório. O agravamento vem da combinação — ver a quarta regra de sobreposição.</td>
+              </tr>
+              <tr>
+                <th scope="row">Empresa recém-criada (menos de 12 meses)</th>
+                <td class="cel-peso">8</td>
+                <td>O Guia ABR do CFC arrola "empresas recém-constituídas com faturamento elevado". Repare que a orientação não trata a idade sozinha como fator de risco: ela associa a constituição recente a um faturamento incompatível. Nossa pergunta é mais simples que a fonte, e por isso recebe o menor peso da matriz. Toda empresa legítima atravessa seus primeiros doze meses. <strong>Admitimos que este é o fator mais discutível da matriz</strong> e o primeiro candidato a ser reescrito por quem for calibrá-la — de preferência transformando-o em "empresa recém-criada com movimentação incompatível com a capacidade declarada".</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="nota-meto">Uma ressalva sobre a aritmética: os pesos formam uma <strong>escala ordinal tratada como se fosse cardinal</strong>. Dizer que PEP "vale duas vezes e meia" empresa recém-criada não tem respaldo empírico. O que tem respaldo é a ordem dos fatores e a distância aproximada entre os blocos — 20, depois 15, depois 12, depois 10, depois 8.</p>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h3>As três faixas e o que fazer em cada uma</h3>
+        <p class="sub-desc">Os cortes em 30 e 60 pontos são recorte didático, não resultado de calibragem contra dados. Correspondem a cerca de 27% e 55% do máximo de 110.</p>
+
+        <div class="tabela-scroll">
+          <table class="tab-meto tab-meto-faixas">
+            <caption>As três faixas de classificação e a diligência esperada em cada uma, em termos práticos. Os limites de pontuação correspondem aos cortes efetivamente aplicados pela ferramenta.</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="col-peso">Faixa</th>
+                <th scope="col">Diligência esperada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><span class="risk-badge risk-low">Baixo</span><span class="faixa-pontos">0 a 30 pontos</span></th>
+                <td>Diligência simplificada: cadastro completo e atualizado, registro das operações, monitoramento de rotina e revisão periódica no prazo padrão da política. Simplificado não é ausente — a Circular BCB nº 3.978/2020, art. 10, § 3º, prevê justamente controles simplificados nas situações de menor risco e reforçados nas de maior risco, e a Resolução CFC nº 1.721/2024, art. 10, exige manter o cadastro e o registro das transações comunicadas ao Coaf por no mínimo cinco anos, contados da conclusão da transação, em qualquer faixa.</td>
+              </tr>
+              <tr>
+                <th scope="row"><span class="risk-badge risk-med">Médio</span><span class="faixa-pontos">31 a 60 pontos</span></th>
+                <td>Diligência padrão reforçada: não basta coletar a informação, é preciso verificar e validar; documentar a origem dos recursos; atualizar o cadastro em prazo mais curto que o padrão; monitorar com atenção específica aos fatores que foram acionados. A Circular BCB nº 3.978/2020, art. 18, §§ 2º e 4º, condiciona a profundidade da verificação ao perfil de risco e manda reavaliar a qualificação de forma permanente.</td>
+              </tr>
+              <tr>
+                <th scope="row"><span class="risk-badge risk-high">Alto</span><span class="faixa-pontos">61 pontos ou mais</span></th>
+                <td>Diligência reforçada (EDD): levantar a origem do patrimônio, e não só a origem dos recursos da operação; aprovação da relação por instância superior, registrada por escrito; monitoramento intensificado; reavaliação em prazo curto; decisão formal e fundamentada sobre iniciar, condicionar ou encerrar a relação. Vale lembrar o art. 23 da Circular BCB nº 3.978/2020: é vedado iniciar relação de negócios sem que identificação e qualificação estejam concluídas. O parágrafo único abre uma única brecha, de até trinta dias, e só por insuficiência de informações de qualificação, desde que sem prejuízo do monitoramento e da seleção de que trata o art. 39.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h3>As quatro regras de sobreposição</h3>
+        <p class="sub-desc">A soma é linear: ela não captura a interação entre fatores nem a obrigação normativa que independe de escore. Duas condições que, somadas, dariam 30 pontos podem descrever um cenário que a norma trata como de alto risco. Por isso estas regras impõem um piso à classificação, qualquer que seja o total apurado.</p>
+
+        <div class="tabela-scroll">
+          <table class="tab-meto tab-meto-regras">
+            <caption>As quatro regras de sobreposição em vigor na versão 2.0, conferidas uma a uma contra o código da ferramenta. Cada regra estabelece um piso: ela pode elevar a classificação, nunca reduzi-la.</caption>
+            <thead>
+              <tr>
+                <th scope="col">Condição</th>
+                <th scope="col" class="col-peso">Piso imposto</th>
+                <th scope="col">Por que a soma não bastaria</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Cliente PEP</th>
+                <td><span class="risk-badge risk-med">Médio</span><span class="piso-nota">com diligência reforçada</span></td>
+                <td>Um PEP sem nenhum outro fator soma 20 pontos e cairia em "Baixo" pela aritmética. Seria contrariar a norma: a Recomendação 12 do GAFI e o art. 19, § 3º, da Circular BCB nº 3.978/2020 condicionam a relação a decisão de nível hierárquico superior e a monitoramento reforçado contínuo. <strong>Nesta ferramenta, cliente PEP nunca é classificado como risco baixo.</strong></td>
+              </tr>
+              <tr>
+                <th scope="row">PEP + origem dos recursos não comprovada</th>
+                <td><span class="risk-badge risk-high">Alto</span></td>
+                <td>Soma 35 pontos, o que pela aritmética seria "Médio". Mas é exatamente a combinação tratada na Recomendação 12, alínea "c", do GAFI: adotar medidas razoáveis para estabelecer a origem da riqueza e dos recursos — exigência direta no caso da PEP estrangeira e aplicável à PEP nacional nas relações de mais alto risco. Sem origem comprovada, a diligência esperada para o PEP não foi cumprida.</td>
+              </tr>
+              <tr>
+                <th scope="row">Jurisdição monitorada pelo GAFI + origem não comprovada</th>
+                <td><span class="risk-badge risk-high">Alto</span></td>
+                <td>Soma exatamente 30 pontos — cairia em "Baixo", no limite superior da faixa. É o cenário do art. 39, I, "g", da Circular BCB nº 3.978/2020, combinado com a Recomendação 19 do GAFI: recurso sem origem demonstrada, vindo de ou destinado a território com deficiências estratégicas.</td>
+              </tr>
+              <tr>
+                <th scope="row">Estrutura opaca + interpostas pessoas</th>
+                <td><span class="risk-badge risk-high">Alto</span></td>
+                <td>Soma 20 pontos — empatada com a regra do PEP isolado como o menor total das quatro — e é o desenho clássico de ocultação: camada societária que impede chegar ao beneficiário final somada a operação conduzida por terceiros. A Circular BCB nº 3.978/2020 manda monitorar os casos em que o beneficiário final não é identificável (art. 39, I, "f"), e a Recomendação 24 do GAFI existe por causa desse arranjo.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h3>Limitações conhecidas</h3>
+        <ul class="lista-meto">
+          <li><strong>Um modelo só não serve a três públicos diferentes.</strong> O escritório contábil responde à Resolução CFC nº 1.721/2024, que alcança apenas as operações listadas no seu art. 2º — imóveis, estabelecimentos, participações societárias, gestão de fundos e ativos, contas, criação e gestão de sociedades e estruturas análogas, operações financeiras, societárias e imobiliárias, e direitos sobre contratos desportivos ou artísticos. A fintech supervisionada responde à Circular BCB nº 3.978/2020. A PSAV responde à Lei nº 14.478/2022, à Resolução BCB nº 520/2025 e às normas que a acompanham (Resoluções BCB nº 519 e 521, de 2025) — estas três em vigor desde 02/02/2026. Os fatores e os pesos deveriam refletir essa diferença, e aqui não refletem.</li>
+          <li><strong>As perguntas são binárias.</strong> Não distinguem PEP nacional de estrangeiro, nem jurisdição sob monitoramento reforçado de jurisdição sob chamado para ação — o GAFI trata as duas listas de forma diferente, e a segunda admite contramedidas.</li>
+          <li><strong>Faltam fatores.</strong> Não há pergunta sobre setor de atividade, produto, canal de distribuição, sanções do Conselho de Segurança da ONU (Lei nº 13.810/2019), nem sobre comportamento do cliente — relutância em fornecer as informações necessárias, honorários elevados e desproporcionais ao serviço prestado, instruções de execução sem a devida explicação, todos citados no Guia ABR do CFC.</li>
+          <li><strong>Não há mitigadores.</strong> A matriz só soma risco. Não desconta nada por cliente antigo, com histórico consistente e movimentação compatível com o que declara.</li>
+          <li><strong>Valor e volume não entram na conta.</strong> Uma operação de R$ 10 mil e uma de R$ 10 milhões marcam o mesmo ponto.</li>
+        </ul>
+
+        <h3 class="sub-h3">Convite a calibrar</h3>
+        <p>Trate os pesos como ponto de partida, não como resultado. Ajuste-os à sua avaliação interna de risco, mexa nos cortes das faixas, acrescente os fatores que a sua carteira exige e remova os que não se aplicam. Calibre por porte, por produto e por clientela: o escritório com dez clientes locais e a fintech com cem mil contas não têm por que usar a mesma escala, e a Resolução CFC nº 1.721/2024 diz exatamente isso no art. 5º, ao exigir que política, procedimentos e controles internos sejam compatíveis com o porte, o volume e o escopo dos trabalhos.</p>
+        <p class="nota-meto">Uma condição: <strong>documente por escrito por que cada peso é aquele</strong>. Não é preciosismo. A Circular BCB nº 3.978/2020 manda que os critérios por categoria de risco constem do manual de procedimentos (art. 22), que o valor de referência de participação societária seja justificado e documentado (art. 25, § 2º) e que a avaliação interna de risco seja documentada, aprovada e revisada a cada dois anos (art. 12). O Guia ABR anexo à Resolução CFC nº 1.721/2024 pede o registro das avaliações de risco, estratégias, políticas e procedimentos. Uma matriz sem justificativa escrita é indefensável em fiscalização — foi para não incorrer no próprio defeito que esta página existe.</p>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h3>Fontes oficiais conferidas</h3>
+        <p class="sub-desc">Cada norma citada nesta página foi lida no texto publicado pelo próprio órgão emissor, em 24/07/2026. Os links abrem em nova aba e apontam direto para a fonte oficial.</p>
+        <ul class="fontes-lista">
+          <li><a href="https://normativos.bcb.gov.br/Lists/Normativos/Attachments/50905/Circ_3978_v5_P.pdf" target="_blank" rel="noopener noreferrer">Circular BCB nº 3.978/2020 — texto consolidado (v5)</a> · Banco Central do Brasil. Base dos artigos 10, 12, 18, 19, 21, 22, 23, 24, 25, 30, 33, 34, 35, 36 e 39 citados acima.</li>
+          <li><a href="https://www1.cfc.org.br/sisweb/SRE/docs/RES_1721.pdf" target="_blank" rel="noopener noreferrer">Resolução CFC nº 1.721/2024</a> · Conselho Federal de Contabilidade. Inclui o Anexo Único — Guia para Abordagem Baseada em Risco, que o art. 14 declara de caráter unicamente orientativo.</li>
+          <li><a href="https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Fatf-recommendations.html" target="_blank" rel="noopener noreferrer">Recomendações do GAFI/FATF</a> · Base das Recomendações 12, 15, 16, 19 e 24 citadas acima.</li>
+          <li><a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/L14478.htm" target="_blank" rel="noopener noreferrer">Lei nº 14.478/2022</a> · Incluiu as prestadoras de serviços de ativos virtuais entre as pessoas obrigadas da Lei nº 9.613/1998.</li>
+          <li><a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&amp;numero=520" target="_blank" rel="noopener noreferrer">Resolução BCB nº 520/2025</a> · Constituição e funcionamento das sociedades prestadoras de serviços de ativos virtuais, com vigência em 02/02/2026.</li>
+          <li><a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/L13810.htm" target="_blank" rel="noopener noreferrer">Lei nº 13.810/2019</a> · Cumprimento de sanções impostas por resoluções do Conselho de Segurança das Nações Unidas.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h3>Versão</h3>
+        <p><strong>Matriz 2.0 — 24/07/2026.</strong> Nove fatores, máximo de 110 pontos, quatro regras de sobreposição, faixas com corte em 30 e 60. Os pesos e as regras descritos nesta página foram conferidos, um a um, contra o código que roda na ferramenta. As normas citadas foram conferidas nos textos oficiais em 24/07/2026. Qualquer mudança de peso, de faixa ou de fator gera nova versão. A versão utilizada é registrada no relatório gerado e no arquivo JSON exportado, para que uma análise feita hoje continue auditável depois que a matriz mudar.</p>
+      </div>
+
+      <div class="disclaimer card" role="note">
+        <strong>⚠️ Aviso jurídico</strong>
+        <p>Esta página e a ferramenta a que ela se refere têm finalidade exclusivamente educacional. Não substituem análise jurídica, regulatória, contábil ou de compliance, nem dispensam profissional habilitado. O resultado da matriz <strong>não gera, não substitui e não dispensa a comunicação obrigatória ao Coaf</strong>, que decorre das hipóteses previstas em norma e independe da faixa de risco apontada aqui. As normas citadas podem ser atualizadas ou revogadas a qualquer tempo: antes de decidir, consulte a fonte oficial.</p>
+      </div>
+
+      <p class="voltar" style="margin:26px 0 0"><a href="index.html">← Voltar para a matriz de risco</a></p>
+
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <span class="brand-title">KYC AML Lite Brasil</span>
+        <p class="footer-note">Ferramenta educacional de código aberto · Licença MIT · Privacy by Design</p>
+        <p class="footer-autor">Autoria: <strong>João Carlos Bueno Abitante</strong> — Contador, CRC-SP 320961/O-4<br />
+          Conteúdo normativo conferido em <time datetime="2026-07-24">24 de julho de 2026</time>.</p>
+      </div>
+      <p class="footer-mini">Nenhum dado pessoal é coletado, transmitido ou armazenado. Processamento 100% local no navegador.</p>
+    </div>
+  </footer>
+
+  <script>
+/* =====================================================================
+   metodologia.html — único script da página.
+   Alterna o tema e persiste a escolha na chave kyc_theme, a mesma usada
+   pelo index.html. Sem rede, sem cookie, sem qualquer outra chave.
+   ===================================================================== */
+(function () {
+  "use strict";
+  var btn = document.getElementById("themeToggle");
+  if (!btn) return;
+  btn.addEventListener("click", function () {
+    var atual = document.documentElement.getAttribute("data-theme");
+    var novo = atual === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", novo);
+    try { localStorage.setItem("kyc_theme", novo); } catch (e) {}
+  });
+})();
+  </script>
+</body>
+</html>
