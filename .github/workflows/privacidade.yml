@@ -7,6 +7,10 @@ name: Barreira de privacidade
 #
 # Verifica TODAS as páginas HTML do site, não só o index — o site tem quatro:
 # index.html, glossario.html, obrigacoes-coaf.html e metodologia.html.
+#
+# Arquivos de verificação de propriedade de buscador (google*.html) são exigidos
+# pelo próprio buscador com conteúdo fixo de uma linha; não são páginas do site
+# e por isso ficam fora das checagens de conteúdo.
 
 on:
   push:
@@ -26,15 +30,16 @@ jobs:
       - name: Listar as páginas verificadas
         run: |
           set -euo pipefail
-          echo "Páginas encontradas:"
-          find . -maxdepth 1 -name '*.html' -print
-          echo "total: $(find . -maxdepth 1 -name '*.html' | wc -l)"
+          echo "Páginas verificadas:"
+          for f in $(ls *.html | grep -v '^google.*\.html$'); do echo "  $f"; done
+          echo "Isentos (verificação de propriedade):"
+          ls google*.html 2>/dev/null || echo "  (nenhum)"
 
       - name: Nenhuma chamada de rede em runtime
         run: |
           set -uo pipefail
           falhou=0
-          for arquivo in *.html; do
+          for arquivo in $(ls *.html | grep -v '^google.*\.html$'); do
             for padrao in 'fetch(' 'XMLHttpRequest' 'WebSocket' 'sendBeacon' 'EventSource' 'importScripts'; do
               if grep -n -F "$padrao" "$arquivo"; then
                 echo "::error file=$arquivo::Chamada de rede encontrada: $padrao"
@@ -48,7 +53,7 @@ jobs:
         run: |
           set -uo pipefail
           falhou=0
-          for arquivo in *.html; do
+          for arquivo in $(ls *.html | grep -v '^google.*\.html$'); do
             # <script src=>, <link rel=stylesheet href=> e <img src=> apontando para fora.
             # Links <a href="https://..."> para fontes oficiais são permitidos.
             if grep -n -E '<(script[^>]+src|link[^>]+stylesheet[^>]*|img[^>]+src)="https?://' "$arquivo"; then
@@ -62,7 +67,7 @@ jobs:
         run: |
           set -uo pipefail
           falhou=0
-          for arquivo in *.html; do
+          for arquivo in $(ls *.html | grep -v '^google.*\.html$'); do
             for padrao in 'googletagmanager' 'google-analytics' 'gtag(' 'hotjar' 'clarity.ms' 'facebook.net' 'plausible' 'matomo' 'segment.com' 'mixpanel'; do
               if grep -n -i -F "$padrao" "$arquivo"; then
                 echo "::error file=$arquivo::Tracker encontrado: $padrao"
@@ -76,7 +81,7 @@ jobs:
         run: |
           set -uo pipefail
           falhou=0
-          for arquivo in *.html; do
+          for arquivo in $(ls *.html | grep -v '^google.*\.html$'); do
             # Só chamadas reais, não menções em comentário. localStorage é permitido
             # exclusivamente para a preferência de tema (kyc_theme).
             if grep -n -E '(localStorage|sessionStorage)\.(get|set|remove)Item|indexedDB\.open' "$arquivo" | grep -v 'kyc_theme'; then
@@ -94,7 +99,7 @@ jobs:
         run: |
           set -uo pipefail
           falhou=0
-          for arquivo in *.html; do
+          for arquivo in $(ls *.html | grep -v '^google.*\.html$'); do
             # cada <a target="_blank"> precisa declarar rel com noopener e noreferrer
             if grep -o -E '<a [^>]*target="_blank"[^>]*>' "$arquivo" \
                | grep -v 'noopener' > /dev/null; then
@@ -119,7 +124,7 @@ jobs:
         run: |
           set -uo pipefail
           falhou=0
-          for arquivo in *.html; do
+          for arquivo in $(ls *.html | grep -v '^google.*\.html$'); do
             if ! grep -q 'finalidade exclusivamente educacional' "$arquivo"; then
               echo "::error file=$arquivo::Aviso jurídico obrigatório ausente."
               falhou=1
@@ -135,7 +140,7 @@ jobs:
         run: |
           set -uo pipefail
           falhou=0
-          for arquivo in *.html; do
+          for arquivo in $(ls *.html | grep -v '^google.*\.html$'); do
             if ! grep -q 'rel="canonical"' "$arquivo"; then
               echo "::error file=$arquivo::Falta <link rel=canonical>."
               falhou=1
