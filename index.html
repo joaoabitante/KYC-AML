@@ -473,6 +473,10 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 .log-tag.log-fix { background: var(--med-bg); color: var(--med-ink); }
 .log-item p { color: var(--text-soft); font-size: .92rem; line-height: 1.65; margin: 0; }
 .section-desc a { color: var(--blue-500); font-weight: 600; }
+.side-metodologia { margin: 14px 0 0; padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.side-metodologia a { font-size: .84rem; font-weight: 700; color: var(--blue-500); text-decoration: none; }
+.side-metodologia a:hover { text-decoration: underline; }
+.side-metodologia span { display: inline-block; margin-top: 4px; font-size: .76rem; color: var(--text-soft); line-height: 1.45; }
 .side-link { font-size: .72rem; font-weight: 700; color: var(--blue-500); text-transform: none; letter-spacing: 0; margin-left: 6px; }
 
 /* Canvas responsivo: sem max-width, o medidor de 300px estourava telas de ~370px */
@@ -669,6 +673,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
         <a href="#educacao">Educação</a>
         <a href="#regulatorio">Base Legal</a>
         <a href="#checklist">Checklist</a>
+        <a href="metodologia.html">Metodologia</a>
         <a href="glossario.html">Glossário</a>
         <a href="obrigacoes-coaf.html">Coaf</a>
         <a href="#faq">Dúvidas</a>
@@ -777,7 +782,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
     <section id="matriz" class="section">
       <div class="section-head">
         <h2>Matriz de risco AML / KYC</h2>
-        <p class="section-desc">Cada fator possui um peso. O score é calculado automaticamente conforme você responde. Selecione a resposta que melhor descreve o cliente ou a operação.</p>
+        <p class="section-desc">Cada fator possui um peso. O score é calculado automaticamente conforme você responde. Selecione a resposta que melhor descreve o cliente ou a operação. Os pesos, as faixas e as regras de sobreposição estão explicados e fundamentados em <a href="metodologia.html">como esta matriz foi construída</a>.</p>
       </div>
 
       <div class="matrix-layout">
@@ -796,12 +801,15 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
           <p id="revisaoBox" class="revisao-box" role="note" hidden></p>
           <div id="overrideBox" class="override-box" role="note" hidden></div>
 
-          <p class="side-sub">Faixas de classificação <a class="side-link" href="metodologia.html">como calculamos</a></p>
+          <p class="side-sub">Faixas de classificação</p>
           <ul class="bands">
             <li><span class="band-chip band-low">0 – 30</span> Risco baixo</li>
             <li><span class="band-chip band-med">31 – 60</span> Risco médio</li>
             <li><span class="band-chip band-high">61 +</span> Risco alto</li>
           </ul>
+
+          <p class="side-metodologia"><a href="metodologia.html">Como esta matriz foi construída →</a><br />
+            <span>Peso de cada fator, o que fazer em cada faixa e as regras que elevam a classificação.</span></p>
 
           <div class="side-actions">
             <button id="genReport" class="btn btn-primary btn-block" type="button">Gerar relatório</button>
