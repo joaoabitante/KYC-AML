@@ -443,6 +443,29 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 .import-label { cursor: pointer; display: inline-flex; align-items: center; }
 .import-label:focus-within { outline: 3px solid var(--blue-500); outline-offset: 2px; }
 #importJson:focus-visible + .import-label, .sr-only:focus + .import-label { outline: 3px solid var(--blue-500); }
+/* Sobre o autor e doação */
+.sobre-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; align-items: start; }
+.sobre-card h3 { font-size: 1.15rem; margin-bottom: 2px; }
+.sobre-cargo { font-size: .84rem; font-weight: 700; color: var(--blue-500); margin-bottom: 12px; }
+.sobre-card p { color: var(--text-soft); font-size: .93rem; line-height: 1.65; margin-bottom: 10px; }
+.sobre-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+.sobre-links a { font-size: .86rem; font-weight: 700; color: var(--blue-500); text-decoration: none; border-bottom: 1px solid currentColor; }
+.doacao-card .btn { margin: 6px 0 12px; }
+.doacao-nota { font-size: .78rem !important; color: var(--text-mute) !important; line-height: 1.5 !important; }
+@media (max-width: 980px) { .sobre-grid { grid-template-columns: 1fr; } }
+
+/* Log de atualizações */
+.log-list { display: flex; flex-direction: column; gap: 12px; }
+.log-item { border-left: 4px solid var(--blue-500); }
+.log-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.log-versao { font-family: var(--font-mono); font-size: .84rem; font-weight: 700; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; }
+.log-head time { font-size: .82rem; color: var(--text-soft); font-weight: 600; }
+.log-tag { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 5px; }
+.log-tag.log-novo { background: var(--low-bg); color: var(--low-ink); }
+.log-tag.log-fix { background: var(--med-bg); color: var(--med-ink); }
+.log-item p { color: var(--text-soft); font-size: .92rem; line-height: 1.65; margin: 0; }
+.section-desc a { color: var(--blue-500); font-weight: 600; }
+
 /* Canvas responsivo: sem max-width, o medidor de 300px estourava telas de ~370px */
 #gaugeCanvas, #donutCanvas { max-width: 100%; height: auto; display: block; margin: 0 auto; }
 /* Reserva de espaço do formulário injetado por JS, para não deslocar o layout */
@@ -585,7 +608,8 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
 /* ===================== IMPRESSÃO / PDF ===================== */
 @media print {
   .site-header, .hero, .main-nav, .report-toolbar, .side-actions,
-  #dashboard, #educacao, .theme-toggle, .site-footer, .skip-link { display: none !important; }
+  #dashboard, #educacao, #sobre, #atualizacoes, #faq, #checklist,
+  .theme-toggle, .site-footer, .skip-link { display: none !important; }
   body { background: #fff; color: #000; }
   .section { animation: none; padding: 0; }
   .card { box-shadow: none; border: 1px solid #999; page-break-inside: avoid; break-inside: avoid; }
@@ -637,6 +661,8 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
         <a href="#regulatorio">Base Legal</a>
         <a href="#checklist">Checklist</a>
         <a href="#faq">Dúvidas</a>
+        <a href="#sobre">Autor</a>
+        <a href="#atualizacoes">Atualizações</a>
       </nav>
 
       <button id="themeToggle" class="theme-toggle" type="button" aria-label="Alternar modo escuro">
@@ -948,6 +974,100 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.015em; }
           <summary>Como os pesos e as faixas da matriz foram definidos?</summary>
           <p>Os pesos refletem a gravidade relativa que os fatores costumam ter na literatura de PLD/FT e nas tipologias mais conhecidas, e as faixas (0–30 baixo, 31–60 médio, 61+ alto) são um recorte didático. Além da soma, existem <strong>regras de sobreposição</strong>: um cliente PEP, por exemplo, nunca é classificado como risco baixo, porque a diligência reforçada é exigida por norma. É um modelo educacional de referência — sua organização deve calibrar os critérios conforme o próprio porte, produtos e clientela.</p>
         </details>
+      </div>
+    </section>
+    <!-- ================= SOBRE O AUTOR ================= -->
+    <section id="sobre" class="section">
+      <div class="section-head">
+        <h2>Sobre o autor</h2>
+        <p class="section-desc">Quem escreveu esta ferramenta e por que ela existe.</p>
+      </div>
+
+      <div class="sobre-grid">
+        <div class="card sobre-card">
+          <h3>João Carlos Bueno Abitante</h3>
+          <p class="sobre-cargo">Contador · CRC-SP 320961/O-4</p>
+          <p>Contador com mais de dez anos de atuação em contabilidade, tributário e compliance. Construo ferramentas fiscais e de conformidade com apoio de inteligência artificial, sempre com a mesma regra: o dado do usuário não sai do navegador dele.</p>
+          <p>Esta matriz nasceu de um incômodo prático. As ferramentas de análise de risco disponíveis pedem cadastro, sobem dados de clientes para servidores de terceiros e cobram por isso. Para um escritório pequeno que precisa cumprir a Resolução CFC nº 1.721/2024, isso é caro e desconfortável — o cliente confiou os dados ao contador, não a um fornecedor de software. Aqui o cálculo acontece na sua máquina e nada é transmitido.</p>
+          <p class="sobre-links">
+            <a href="https://joao.abitante.net/" target="_blank" rel="noopener noreferrer">joao.abitante.net</a>
+            <a href="https://contbit.tax/" target="_blank" rel="noopener noreferrer">contbit.tax</a>
+            <a href="https://github.com/joaoabitante" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/joaocarlos" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </p>
+        </div>
+
+        <div class="card sobre-card doacao-card">
+          <h3>Apoie o projeto</h3>
+          <p>A ferramenta é gratuita, de código aberto e sem anúncio, patrocínio ou rastreamento. Se ela te poupou tempo, você pode contribuir via <strong>LiveTip</strong>.</p>
+          <p class="doacao-nota">Doação voluntária, em Bitcoin ou Pix, processada pelo LiveTip. Nada é cobrado pelo uso da ferramenta e nenhuma função depende de pagamento.</p>
+          <a class="btn btn-primary" href="https://livetip.gg/libertcontador" target="_blank" rel="noopener noreferrer">Doar via LiveTip</a>
+          <p class="doacao-nota">Ao abrir o link você sai deste site e passa a interagir com o LiveTip, que tem os próprios termos e a própria política de privacidade.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LOG DE ATUALIZAÇÕES ================= -->
+    <section id="atualizacoes" class="section">
+      <div class="section-head">
+        <h2>Log de atualizações</h2>
+        <p class="section-desc">Tudo o que muda nesta ferramenta fica registrado aqui, inclusive as correções de erro. O histórico completo está no <a href="https://github.com/joaoabitante/KYC-AML/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">CHANGELOG do repositório</a>.</p>
+      </div>
+
+      <div class="log-list">
+        <article class="card log-item">
+          <header class="log-head">
+            <span class="log-versao">2.3.0</span>
+            <time datetime="2026-07-24">24/07/2026</time>
+            <span class="log-tag log-fix">correção</span>
+          </header>
+          <p><strong>Vigência e revogação da Resolução CFC nº 1.721/2024 estavam erradas nesta página.</strong> A entrada em vigor não foi 03/06/2024: essa data foi adiada para 02/09/2024 pela Resolução CFC nº 1.728/2024. E a norma revogada foi a Resolução CFC nº 1.530/2017, não diretamente a 1.445/2013. Encontrado em checagem cruzada e corrigido no mesmo dia.</p>
+        </article>
+
+        <article class="card log-item">
+          <header class="log-head">
+            <span class="log-versao">2.2.0</span>
+            <time datetime="2026-07-24">24/07/2026</time>
+            <span class="log-tag log-novo">novidade</span>
+          </header>
+          <p>As <strong>jurisdições listadas pelo GAFI</strong> passaram a aparecer dentro da própria pergunta da matriz — antes era preciso sair do site para responder. Entraram também a <strong>importação de análise anterior</strong>, que mostra a variação de risco desde a última avaliação, e o <strong>checklist de cadastro por perfil de cliente</strong>.</p>
+        </article>
+
+        <article class="card log-item">
+          <header class="log-head">
+            <span class="log-versao">2.1.0</span>
+            <time datetime="2026-07-24">24/07/2026</time>
+            <span class="log-tag log-fix">correção</span>
+          </header>
+          <p>Acessibilidade: os rótulos de risco não atingiam o contraste mínimo exigido — inclusive o aviso jurídico, que estava no pior nível de todo o site. Os botões da matriz não informavam a resposta escolhida a leitores de tela e não havia indicação visível de foco. O relatório também era cortado ao imprimir. Tudo corrigido, e foi acrescentado botão de imprimir em PDF.</p>
+        </article>
+
+        <article class="card log-item">
+          <header class="log-head">
+            <span class="log-versao">2.0.0</span>
+            <time datetime="2026-07-24">24/07/2026</time>
+            <span class="log-tag log-fix">correção</span>
+          </header>
+          <p><strong>Três normas estavam citadas com ementa errada</strong> e a matriz classificava um cliente PEP como risco baixo, contrariando a diligência reforçada que a própria página ensina. A base regulatória foi refeita com fonte oficial em cada norma, e foram criadas <strong>regras de sobreposição</strong>: PEP nunca mais cai em risco baixo. A matriz também deixou de vir pré-respondida, o que permitia exportar um relatório sem responder nada.</p>
+        </article>
+
+        <article class="card log-item">
+          <header class="log-head">
+            <span class="log-versao">1.1.0</span>
+            <time datetime="2026-07-23">23/07/2026</time>
+            <span class="log-tag log-novo">novidade</span>
+          </header>
+          <p>Domínio próprio em kyc.contbit.tax, com cabeçalhos de segurança, miniatura para compartilhamento e dados estruturados.</p>
+        </article>
+
+        <article class="card log-item">
+          <header class="log-head">
+            <span class="log-versao">1.0.0</span>
+            <time datetime="2026-07-23">23/07/2026</time>
+            <span class="log-tag log-novo">novidade</span>
+          </header>
+          <p>Primeira versão pública: matriz de nove fatores ponderados, painel da sessão, relatório exportável e conteúdo educacional.</p>
+        </article>
       </div>
     </section>
   </main>

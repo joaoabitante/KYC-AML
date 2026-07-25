@@ -4,6 +4,16 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Histórico anterior a este arquivo: ver commits do repositório e o README.
 
+## [2.4.0] - 2026-07-24
+### Adicionado
+- Seção **Sobre o autor**, com a credencial CRC-SP, o motivo de a ferramenta existir e
+  links do ecossistema (joao.abitante.net, contbit.tax, GitHub, LinkedIn).
+- **Apoio via LiveTip** (livetip.gg/libertcontador): doação voluntária, sem nenhuma
+  função da ferramenta condicionada a pagamento, com aviso de que o link leva a um
+  serviço de terceiro.
+- **Log de atualizações visível na própria página**, incluindo as correções de erro —
+  padrão dos projetos do autor. O histórico completo continua no CHANGELOG.
+
 ## [2.3.0] - 2026-07-24
 ### Corrigido
 - **Resolução CFC nº 1.721/2024 com vigência e revogação erradas** (publicadas na onda 1):
