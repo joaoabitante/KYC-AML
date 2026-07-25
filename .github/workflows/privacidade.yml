@@ -4,6 +4,9 @@ name: Barreira de privacidade
 # e não coletar dado nenhum. Isso é fácil de quebrar sem querer: basta alguém (ou
 # uma IA) adicionar um fetch, uma fonte do Google ou um script de analytics.
 # Este workflow falha o PR antes que isso chegue ao ar.
+#
+# Verifica TODAS as páginas HTML do site, não só o index — o site tem quatro:
+# index.html, glossario.html, obrigacoes-coaf.html e metodologia.html.
 
 on:
   push:
@@ -20,63 +23,91 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Listar as páginas verificadas
+        run: |
+          set -euo pipefail
+          echo "Páginas encontradas:"
+          find . -maxdepth 1 -name '*.html' -print
+          echo "total: $(find . -maxdepth 1 -name '*.html' | wc -l)"
+
       - name: Nenhuma chamada de rede em runtime
         run: |
           set -uo pipefail
           falhou=0
-          # XMLHttpRequest e WebSocket entram como palavra inteira; fetch( evita casar "prefetch"
-          for padrao in 'fetch(' 'XMLHttpRequest' 'WebSocket' 'sendBeacon' 'EventSource' 'importScripts'; do
-            if grep -n -F "$padrao" index.html; then
-              echo "::error::Chamada de rede encontrada em index.html: $padrao"
+          for arquivo in *.html; do
+            for padrao in 'fetch(' 'XMLHttpRequest' 'WebSocket' 'sendBeacon' 'EventSource' 'importScripts'; do
+              if grep -n -F "$padrao" "$arquivo"; then
+                echo "::error file=$arquivo::Chamada de rede encontrada: $padrao"
+                falhou=1
+              fi
+            done
+          done
+          exit $falhou
+
+      - name: Nenhum recurso externo (CDN, fonte, script ou imagem de terceiro)
+        run: |
+          set -uo pipefail
+          falhou=0
+          for arquivo in *.html; do
+            # <script src=>, <link rel=stylesheet href=> e <img src=> apontando para fora.
+            # Links <a href="https://..."> para fontes oficiais são permitidos.
+            if grep -n -E '<(script[^>]+src|link[^>]+stylesheet[^>]*|img[^>]+src)="https?://' "$arquivo"; then
+              echo "::error file=$arquivo::Recurso externo carregado pela página."
               falhou=1
             fi
           done
           exit $falhou
 
-      - name: Nenhum recurso externo (CDN, fonte, imagem de terceiro)
-        run: |
-          set -uo pipefail
-          # procura src/href http(s) que não sejam do próprio domínio nem links de texto
-          if grep -n -E '(src|href)="https?://' index.html \
-             | grep -v 'kyc.contbit.tax' \
-             | grep -v -E 'rel="(noopener|noreferrer| )*[^"]*"' \
-             | grep -E '(script|link rel="stylesheet"|img)'; then
-            echo "::error::Recurso externo referenciado no HTML."
-            exit 1
-          fi
-          echo "Nenhum recurso externo carregado."
-
       - name: Nenhum tracker ou analytics
         run: |
           set -uo pipefail
           falhou=0
-          for padrao in 'googletagmanager' 'google-analytics' 'gtag(' 'hotjar' 'clarity.ms' 'facebook.net' 'plausible' 'matomo' 'segment.com' 'mixpanel'; do
-            if grep -n -i -F "$padrao" index.html; then
-              echo "::error::Tracker encontrado: $padrao"
-              falhou=1
-            fi
+          for arquivo in *.html; do
+            for padrao in 'googletagmanager' 'google-analytics' 'gtag(' 'hotjar' 'clarity.ms' 'facebook.net' 'plausible' 'matomo' 'segment.com' 'mixpanel'; do
+              if grep -n -i -F "$padrao" "$arquivo"; then
+                echo "::error file=$arquivo::Tracker encontrado: $padrao"
+                falhou=1
+              fi
+            done
           done
           exit $falhou
 
       - name: Nenhum dado pessoal em armazenamento persistente
         run: |
           set -uo pipefail
-          # Só chamadas reais (getItem/setItem/open), não menções em comentário.
-          # localStorage é permitido apenas para a preferência de tema (kyc_theme).
-          if grep -n -E '(localStorage|sessionStorage)\.(get|set|remove)Item|indexedDB\.open' index.html | grep -v 'kyc_theme'; then
-            echo "::error::Uso de armazenamento fora da preferência de tema (kyc_theme)."
-            exit 1
-          fi
-          if grep -n -i 'document.cookie' index.html; then
-            echo "::error::Uso de cookie encontrado."
-            exit 1
-          fi
-          echo "Armazenamento restrito à preferência de tema."
+          falhou=0
+          for arquivo in *.html; do
+            # Só chamadas reais, não menções em comentário. localStorage é permitido
+            # exclusivamente para a preferência de tema (kyc_theme).
+            if grep -n -E '(localStorage|sessionStorage)\.(get|set|remove)Item|indexedDB\.open' "$arquivo" | grep -v 'kyc_theme'; then
+              echo "::error file=$arquivo::Armazenamento fora da preferência de tema."
+              falhou=1
+            fi
+            if grep -n -i 'document.cookie' "$arquivo"; then
+              echo "::error file=$arquivo::Uso de cookie encontrado."
+              falhou=1
+            fi
+          done
+          exit $falhou
+
+      - name: Todo link externo com noopener e noreferrer
+        run: |
+          set -uo pipefail
+          falhou=0
+          for arquivo in *.html; do
+            # cada <a target="_blank"> precisa declarar rel com noopener e noreferrer
+            if grep -o -E '<a [^>]*target="_blank"[^>]*>' "$arquivo" \
+               | grep -v 'noopener' > /dev/null; then
+              echo "::error file=$arquivo::Link com target=_blank sem rel=noopener."
+              falhou=1
+            fi
+          done
+          exit $falhou
 
       - name: CSP e cabeçalhos de segurança presentes
         run: |
-          set -uo pipefail
-          for chave in "connect-src 'none'" "Strict-Transport-Security" "X-Content-Type-Options" "Referrer-Policy" "X-Frame-Options"; do
+          set -euo pipefail
+          for chave in "connect-src 'none'" "Strict-Transport-Security" "X-Content-Type-Options" "Referrer-Policy" "X-Frame-Options" "Cross-Origin-Opener-Policy"; do
             if ! grep -q -F "$chave" vercel.json; then
               echo "::error::Cabeçalho ausente no vercel.json: $chave"
               exit 1
@@ -84,15 +115,36 @@ jobs:
           done
           echo "Cabeçalhos de segurança no lugar."
 
-      - name: O aviso jurídico continua na página
+      - name: Aviso jurídico em todas as páginas
         run: |
           set -uo pipefail
-          if ! grep -q 'finalidade exclusivamente educacional' index.html; then
-            echo "::error::Aviso jurídico obrigatório foi removido do index.html."
-            exit 1
-          fi
-          if ! grep -q -i 'coaf' index.html; then
-            echo "::error::Aviso sobre a comunicação ao Coaf foi removido."
-            exit 1
-          fi
-          echo "Avisos obrigatórios presentes."
+          falhou=0
+          for arquivo in *.html; do
+            if ! grep -q 'finalidade exclusivamente educacional' "$arquivo"; then
+              echo "::error file=$arquivo::Aviso jurídico obrigatório ausente."
+              falhou=1
+            fi
+            if ! grep -q -i 'coaf' "$arquivo"; then
+              echo "::error file=$arquivo::Aviso sobre a comunicação ao Coaf ausente."
+              falhou=1
+            fi
+          done
+          exit $falhou
+
+      - name: Toda página no sitemap e com canonical
+        run: |
+          set -uo pipefail
+          falhou=0
+          for arquivo in *.html; do
+            if ! grep -q 'rel="canonical"' "$arquivo"; then
+              echo "::error file=$arquivo::Falta <link rel=canonical>."
+              falhou=1
+            fi
+            nome=$(basename "$arquivo")
+            if [ "$nome" = "index.html" ]; then continue; fi
+            if ! grep -q "$nome" sitemap.xml; then
+              echo "::error file=$arquivo::Página não está no sitemap.xml."
+              falhou=1
+            fi
+          done
+          exit $falhou
