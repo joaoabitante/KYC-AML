@@ -4,6 +4,15 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Histórico anterior a este arquivo: ver commits do repositório e o README.
 
+## [3.1.0] - 2026-10-26
+### Adicionado
+- Resolução BCB nº 591, de 30/09/2026 (DOU de 01/10/2026), na base regulatória e na
+  tabela de obrigações. A norma revoga a Resolução BCB nº 588/2026 e altera o art. 49
+  da Circular BCB nº 3.978/2020: comunicação ao Coaf de câmbio em espécie a partir de
+  US$ 10 mil e de transferência de ativo virtual com carteira autocustodiada a partir
+  do equivalente a US$ 10 mil. Operações desses incisos contratadas de 01/10/2026 a
+  31/12/2026 se comunicam no primeiro dia útil de janeiro de 2027.
+
 ## [3.0.0] - 2026-07-24
 ### Adicionado
 - **Três páginas de conteúdo**, cada uma com título, descrição, canonical e dados
